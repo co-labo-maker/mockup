@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロトタイプ一覧 | Co-LABO MAKER</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #F7F7F7;
+      color: #333333;
+      min-height: 100vh;
+    }
+    .header {
+      background: #fff;
+      border-bottom: 3px solid #00ADEE;
+      padding: 16px 24px;
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #00ADEE;
+      text-decoration: none;
+    }
+    .logo span { color: #EC1B23; }
+    .header-meta {
+      font-size: 12px;
+      color: #666;
+    }
+    .hero {
+      background: linear-gradient(135deg, #00ADEE 0%, #009CD6 100%);
+      color: #fff;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .theme-card {
+      background: #fff;
+      border: 1px solid #D8D8D8;
+      border-radius: 10px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      display: block;
+    }
+    .theme-card:hover {
+      border-color: #00ADEE;
+      box-shadow: 0 4px 16px rgba(0, 173, 238, 0.12);
+    }
+    .theme-card h2 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #333333;
+    }
+    .theme-card p {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .theme-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: #999;
+    }
+    .loading {
+      text-align: center;
+      padding: 60px 0;
+      color: #999;
+      font-size: 14px;
+    }
+    .error-msg {
+      text-align: center;
+      padding: 60px 0;
+      color: #EC1B23;
+      font-size: 14px;
+    }
+    @media (max-width: 640px) {
+      .theme-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero { padding: 32px 16px; }
+      .hero h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if (sessionStorage.getItem("proto_auth") !== "b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca") {
+      location.replace("index.html");
+    }
+  </script>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-meta">社内プロトタイプ</div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>プロトタイプ一覧</h1>
+    <p>テーマごとのプロトタイプ・調査レポートにアクセスできます</p>
+  </div>
+
+  <div class="container">
+    <div id="themeGrid" class="theme-grid">
+      <div class="loading">読み込み中...</div>
+    </div>
+  </div>
+
+  <script>
+    async function loadThemes() {
+      const grid = document.getElementById('themeGrid');
+      try {
+        const res = await fetch('themes.json');
+        if (!res.ok) throw new Error('Failed to load themes.json');
+        const data = await res.json();
+        const themes = data.themes;
+
+        if (themes.length === 0) {
+          grid.innerHTML = '<div class="loading">公開中のテーマはありません</div>';
+          return;
+        }
+
+        grid.innerHTML = themes.map(theme => `
+          <a href="${theme.id}/prototype-index.html" class="theme-card">
+            <h2>${theme.title}</h2>
+            <p>${theme.description}</p>
+            <div class="theme-meta">
+              <span>${theme.date}</span>
+              <span>${theme.fileCount} ファイル</span>
+            </div>
+          </a>
+        `).join('');
+      } catch (e) {
+        grid.innerHTML = '<div class="error-msg">テーマの読み込みに失敗しました</div>';
+        console.error(e);
+      }
+    }
+    loadThemes();
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+
+# Claude
+.claude/*
+!.claude/commands/
+
+# Drafts (working directory)
+drafts/

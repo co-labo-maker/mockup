@@ -83,7 +83,7 @@
 <body>
   <div class="login-card">
     <div class="logo">Co-LABO <span>MAKER</span></div>
-    <div class="subtitle">カテゴリUIプロトタイプ（社内限定）</div>
+    <div class="subtitle">プロトタイプ（社内限定）</div>
     <form id="loginForm">
       <div class="input-group">
         <label for="password">パスワード</label>
@@ -98,7 +98,7 @@
 
     // Already authenticated
     if (sessionStorage.getItem('proto_auth') === HASH) {
-      location.replace('prototype-index.html');
+      location.replace('portal.html');
     }
 
     async function sha256(text) {
@@ -113,7 +113,7 @@
       const hash = await sha256(pw);
       if (hash === HASH) {
         sessionStorage.setItem('proto_auth', HASH);
-        location.replace('prototype-index.html');
+        location.replace('portal.html');
       } else {
         document.getElementById('error').style.display = 'block';
       }
