@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロトタイプ一覧 | Co-LABO MAKER カテゴリUI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #F8F9FA;
+      color: #1a1a1a;
+      min-width: 1280px;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      border-bottom: 3px solid #2563EB;
+      padding: 20px 40px;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2563EB;
+      text-decoration: none;
+    }
+    .logo span { color: #DC2626; }
+    .header-meta {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: #fff;
+      padding: 48px 40px;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 14px;
+      opacity: 0.85;
+      line-height: 1.6;
+    }
+
+    /* Main */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 40px 64px;
+    }
+
+    /* Section */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #2563EB;
+      display: inline-block;
+    }
+    .section-desc {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+
+    /* Cards Grid */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    /* Card */
+    .card {
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .card-preview {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #999;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-body {
+      padding: 16px 20px;
+    }
+    .card-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .badge-prototype {
+      background: #DBEAFE;
+      color: #2563EB;
+    }
+    .badge-research {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+    .badge-category {
+      background: #DCFCE7;
+      color: #16A34A;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #1a1a1a;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* Preview colors for prototypes */
+    .preview-pulldown {
+      background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    }
+    .preview-sidebar {
+      background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+    }
+    .preview-breadcrumb {
+      background: linear-gradient(135deg, #FFF7ED, #FEF3C7);
+    }
+    .preview-always {
+      background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
+    }
+    .preview-research {
+      background: linear-gradient(135deg, #F8F9FA, #E5E7EB);
+    }
+
+    /* Preview mockup */
+    .preview-mockup {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .preview-mockup svg {
+      opacity: 0.3;
+      margin-bottom: 8px;
+    }
+    .preview-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mini mockups */
+    .mini-header {
+      width: 80%;
+      height: 8px;
+      background: #2563EB;
+      border-radius: 2px;
+      margin-bottom: 8px;
+      opacity: 0.4;
+    }
+    .mini-row {
+      display: flex;
+      gap: 6px;
+      width: 80%;
+      margin-bottom: 4px;
+    }
+    .mini-sidebar {
+      width: 30%;
+      height: 60px;
+      background: rgba(37,99,235,0.15);
+      border-radius: 3px;
+    }
+    .mini-content {
+      width: 70%;
+      height: 60px;
+      background: rgba(37,99,235,0.08);
+      border-radius: 3px;
+    }
+    .mini-menu {
+      width: 60%;
+      height: 50px;
+      background: rgba(37,99,235,0.12);
+      border-radius: 3px;
+      margin-bottom: 4px;
+    }
+    .mini-breadcrumb {
+      width: 80%;
+      height: 6px;
+      background: rgba(37,99,235,0.2);
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+    .mini-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      width: 80%;
+    }
+    .mini-card {
+      height: 20px;
+      background: rgba(37,99,235,0.08);
+      border-radius: 2px;
+    }
+    .mini-detail {
+      width: 80%;
+      height: 50px;
+      background: rgba(37,99,235,0.08);
+      border-radius: 3px;
+      margin-bottom: 6px;
+    }
+    .mini-category-area {
+      width: 80%;
+      height: 30px;
+      background: rgba(139,92,246,0.15);
+      border-radius: 3px;
+      border: 1px dashed rgba(139,92,246,0.3);
+    }
+
+    /* Doc card preview */
+    .doc-lines {
+      width: 70%;
+    }
+    .doc-line {
+      height: 4px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 2px;
+      margin-bottom: 6px;
+    }
+    .doc-line:nth-child(1) { width: 60%; }
+    .doc-line:nth-child(2) { width: 90%; }
+    .doc-line:nth-child(3) { width: 75%; }
+    .doc-line:nth-child(4) { width: 85%; }
+    .doc-line:nth-child(5) { width: 50%; }
+    .doc-line:nth-child(6) { width: 95%; }
+
+    /* Footer */
+    .footer {
+      background: #1a1a1a;
+      color: #999;
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .footer a {
+      color: #999;
+      text-decoration: none;
+    }
+
+    /* Timestamp */
+    .timestamp {
+      text-align: right;
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body><script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("index.html");}</script>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">Co-LABO <span>MAKER</span></a>
+      <div class="header-meta">カテゴリUIプロトタイプ集</div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>カテゴリUI プロトタイプ一覧</h1>
+      <p>中古理化学機器ECサイトのカテゴリナビゲーション改善に向けた調査レポート・カテゴリ提案・HTMLプロトタイプ集</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="timestamp">生成日時: 2026-02-20</div>
+
+    <!-- Prototypes Section -->
+    <div class="section">
+      <div class="section-title">HTMLプロトタイプ（4画面）</div>
+      <p class="section-desc">モノタロウのテキストベースUI + ZOZOの余白・トンマナ + 現サイトの色を踏襲した、PC版カテゴリUIプロトタイプ</p>
+      <div class="cards">
+
+        <!-- Card 1: Pulldown -->
+        <a href="prototype-category-pulldown.html" class="card">
+          <div class="card-preview preview-pulldown">
+            <div class="preview-mockup">
+              <div class="mini-header"></div>
+              <div class="mini-menu"></div>
+              <div class="mini-cards">
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-prototype">プロトタイプ</span>
+            <div class="card-title">画面1: カテゴリプルダウン</div>
+            <div class="card-desc">ヘッダー検索バー横のメガメニュー式カテゴリプルダウン。大カテゴリ13件 → 中カテゴリ → 小カテゴリの3ペイン構造。ホバーで展開、件数表示付き。</div>
+          </div>
+        </a>
+
+        <!-- Card 2: Sidebar -->
+        <a href="prototype-category-sidebar.html" class="card">
+          <div class="card-preview preview-sidebar">
+            <div class="preview-mockup">
+              <div class="mini-header"></div>
+              <div class="mini-row">
+                <div class="mini-sidebar"></div>
+                <div class="mini-content"></div>
+              </div>
+              <div class="mini-cards" style="width: 50%; margin-left: auto;">
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-prototype">プロトタイプ</span>
+            <div class="card-title">画面2: カテゴリサイドバー</div>
+            <div class="card-desc">検索結果画面の左サイドバー（260px）にカテゴリツリーを表示。開閉式ツリー、件数表示、選択ハイライト。右に商品カード8件のグリッド。</div>
+          </div>
+        </a>
+
+        <!-- Card 3: Breadcrumb -->
+        <a href="prototype-breadcrumb.html" class="card">
+          <div class="card-preview preview-breadcrumb">
+            <div class="preview-mockup">
+              <div class="mini-header"></div>
+              <div class="mini-breadcrumb"></div>
+              <div class="mini-detail"></div>
+              <div class="mini-cards" style="width: 80%;">
+                <div class="mini-card" style="height: 12px;"></div>
+                <div class="mini-card" style="height: 12px;"></div>
+                <div class="mini-card" style="height: 12px;"></div>
+                <div class="mini-card" style="height: 12px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-prototype">プロトタイプ</span>
+            <div class="card-title">画面3: パンくずリスト</div>
+            <div class="card-desc">商品詳細ページの4階層パンくず表示。スペック表、中古品情報（使用年数・動作確認・付属品等）を含む完全な商品詳細画面。</div>
+          </div>
+        </a>
+
+        <!-- Card 4: Always Visible -->
+        <a href="prototype-category-always-visible.html" class="card">
+          <div class="card-preview preview-always">
+            <div class="preview-mockup">
+              <div class="mini-header"></div>
+              <div class="mini-breadcrumb"></div>
+              <div class="mini-detail"></div>
+              <div class="mini-category-area"></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-prototype">プロトタイプ</span>
+            <div class="card-title">画面4: カテゴリ常時表示</div>
+            <div class="card-desc">商品詳細ページ内のカテゴリ常時表示エリア。「このカテゴリの他の商品」カード、兄弟カテゴリチップ、関連カテゴリサジェストの3セクション構成。</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Research Section -->
+    <div class="section">
+      <div class="section-title">調査レポート</div>
+      <p class="section-desc">現サイトと競合サイト（モノタロウ・ZOZO）の調査結果</p>
+      <div class="cards">
+
+        <!-- Current Site -->
+        <a href="research-current-site.md" class="card">
+          <div class="card-preview preview-research">
+            <div class="preview-mockup">
+              <div class="doc-lines">
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-research">調査レポート</span>
+            <div class="card-title">現サイト調査結果</div>
+            <div class="card-desc">Co-LABO MAKER現サイトのカラーパレット、フォント、ヘッダー/フッター構造、カテゴリ表示方法、ボタン・カードデザインパターンの調査結果。</div>
+          </div>
+        </a>
+
+        <!-- Competitors -->
+        <a href="research-competitors.md" class="card">
+          <div class="card-preview preview-research">
+            <div class="preview-mockup">
+              <div class="doc-lines">
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-research">調査レポート</span>
+            <div class="card-title">競合サイト調査結果</div>
+            <div class="card-desc">モノタロウ（メガメニュー・サイドバー・パンくず・テキストベースUI）とZOZO（トンマナ・余白・カードデザイン）の調査結果とプロトタイプへの設計方針。</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Category Proposal Section -->
+    <div class="section">
+      <div class="section-title">カテゴリ提案</div>
+      <p class="section-desc">Level-2 小カテゴリの提案（21中カテゴリに72小カテゴリを追加）</p>
+      <div class="cards" style="grid-template-columns: 1fr;">
+
+        <!-- Category Proposal -->
+        <a href="proposed-level2-categories.md" class="card">
+          <div class="card-preview preview-research" style="height: 120px;">
+            <div class="preview-mockup">
+              <div class="doc-lines">
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+                <div class="doc-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge badge-category">カテゴリ提案</span>
+            <div class="card-title">Level-2 小カテゴリ提案</div>
+            <div class="card-desc">13大カテゴリ × 中カテゴリに対するLevel-2小カテゴリの提案。HPLC（5種）、遠心分離機（4種）、顕微鏡（5種）等、商品数が多く細分化に意味がある21中カテゴリに合計72の小カテゴリを追加。</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div>Co-LABO MAKER カテゴリUIプロトタイプ</div>
+    <div style="margin-top: 4px;">&copy; 2026 Co-LABO MAKER All Rights Reserved.</div>
+  </footer>
+
+</body>
+</html>
