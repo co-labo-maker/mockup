@@ -15,9 +15,9 @@ $ARGUMENTS — 公開するテーマフォルダ名（例: `20260219_testrun`）
    ```
 4. **オーバーレイ注入**: `prototype-index.html` **以外**の全 prototype-*.html に、auth gate 直後に以下のフローティングオーバーレイを注入する（既に含まれている場合はスキップ）:
    ```html
-   <div style="position:fixed;top:12px;left:12px;z-index:99999;display:flex;gap:8px;align-items:center;">
-     <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a>
+   <div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
      <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+     <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a>
    </div>
    ```
 5. **themes.json 更新**: `docs/themes.json` を読み込み、該当テーマのエントリを追加または上書きする
