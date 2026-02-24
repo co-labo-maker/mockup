@@ -10,3 +10,6 @@
 
 # Drafts (working directory)
 drafts/
+
+# Playwright MCP
+.playwright-mcp/*

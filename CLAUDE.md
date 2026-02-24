@@ -29,10 +29,12 @@ Co-LABO MAKER 中古理化学機器ECプラットフォームのモックアッ�
 
 ## プロトタイプ出力ルール
 
-- 出力先: drafts/
-- ファイル名: prototype-{名前}.html
+- 出力先: `drafts/{テーマフォルダ}/`（例: `drafts/20260223-category-ui/`）
+- テーマフォルダ名: `YYYYMMDD-テーマ名`（日付+ハイフン区切り）
+- 一覧ページ: `prototype-index.html`（テーマ内の各ページへのリンク集）
+- 個別ページ: `prototype-{名前}.html`
 - スタンドアロンHTML（外部依存なし）
-- 公開時は `/publish` コマンドを使用
+- 公開時は `/publish <テーマフォルダ>` コマンドを使用
 
 ## 公開ワークフロー
 
