@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>ご利用ガイド｜Co-LABO MAKER - Pattern C ビジュアルガイド</title>
+<style>
+/* ==========================================================
+   Co-LABO MAKER Design System - Base CSS
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282;
+  --color-disabled: #adadad;
+  --color-success: #00d600; --color-success-bg: #d9f8ec;
+  --color-warning: #fed802; --color-warning-bg: #fffbdf;
+  --color-error: #ec1b23; --color-error-bg: #fff3f3;
+  --color-info: #00adee; --color-info-bg: #e6f7fd;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-width: 1280px;
+}
+.btn-solid {
+  background: var(--color-primary); color: white; border: none; border-radius: 999px;
+  font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-solid:hover { background: var(--color-primary-hover); }
+.btn-outline-primary {
+  background: white; color: var(--color-primary); border: 1px solid var(--color-primary);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-primary:hover { background: #fcddde; color: #d41820; border-color: #d41820; }
+.btn-outline-secondary {
+  background: white; color: var(--color-text-muted); border: 1px solid var(--color-text-muted);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-secondary:hover { background: #eceaea; }
+.btn-sm { height: 28px; min-width: 104px; padding: 0 12px; font-size: 14px; letter-spacing: 1px; }
+.btn-md { height: 36px; min-width: 120px; padding: 0 16px; font-size: 16px; letter-spacing: 1px; }
+.btn-lg { height: 48px; min-width: 136px; padding: 0 24px; font-size: 18px; letter-spacing: 0; }
+.btn-xl { height: 56px; min-width: 144px; padding: 0 28px; font-size: 18px; letter-spacing: 0; }
+
+/* ========== Pattern C: ビジュアルガイド ========== */
+a { color: inherit; text-decoration: none; }
+
+/* ── Header (approved design) ── */
+.header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); position: relative; z-index: 100; }
+.header-inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; height: 48px; border-bottom: 1px solid #eee; }
+.logo { font-size: 18px; font-weight: 700; color: #00ADEE; letter-spacing: -0.02em; }
+.logo span { color: #EC1B23; }
+.header-top-links { display: flex; gap: 18px; font-size: 12px; color: #666; }
+.header-top-links a { color: #666; font-size: 12px; }
+.header-top-links a:hover { color: #00ADEE; }
+.header-search { display: flex; align-items: center; height: 52px; gap: 0; }
+.category-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; background: #fff; border: 1px solid #ccc; border-right: none; border-radius: 4px 0 0 4px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; white-space: nowrap; transition: background .15s; font-family: inherit; }
+.category-btn:hover { background: #f9f9f9; }
+.search-input { flex: 1; height: 36px; border: 1px solid #ccc; border-left: none; border-right: none; padding: 0 12px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #00ADEE; }
+.search-btn { height: 36px; padding: 0 24px; background: #00ADEE; color: #fff; border: 1px solid #00ADEE; border-radius: 0 4px 4px 0; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.search-btn:hover { background: #009CD6; }
+.header-right-links { display: flex; align-items: center; gap: 16px; margin-left: 20px; white-space: nowrap; }
+.header-right-links a { font-size: 13px; color: #333; font-weight: 500; }
+.contact-link { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-width: 104px; padding: 0 28px; background: #fff; border: 1px solid #EC1B23; border-radius: 999px; color: #EC1B23 !important; font-weight: 700 !important; font-size: 12px; letter-spacing: 1px; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; }
+.contact-link:hover { background: #FFF0F0; text-decoration: none; }
+
+
+/* Breadcrumb */
+.breadcrumb {
+  max-width: 1200px; margin: 0 auto; padding: 12px 20px;
+  font-size: 13px; color: var(--color-text-subtle);
+}
+.breadcrumb a { color: var(--color-text-subtle); }
+.breadcrumb a:hover { color: var(--color-brand-blue); }
+.breadcrumb span { margin: 0 6px; }
+
+/* Page hero - visual style */
+.page-hero {
+  background: linear-gradient(135deg, #e6f7fd 0%, #fff 50%, #fff3f3 100%);
+  padding: 48px 20px; text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+.page-hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+.page-hero p { font-size: 15px; color: var(--color-text-muted); }
+
+/* Section */
+.section { padding: 56px 20px; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-alt { background: var(--color-bg-subtle); }
+.section-heading {
+  font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 40px;
+  position: relative; padding-bottom: 14px;
+}
+.section-heading::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 48px; height: 3px; background: var(--color-brand-blue); border-radius: 2px;
+}
+
+/* Horizontal flow steps */
+.flow-steps {
+  display: flex; align-items: flex-start; gap: 0; position: relative;
+}
+.flow-step {
+  flex: 1; text-align: center; position: relative; padding: 0 12px;
+}
+.flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute; right: -6px; top: 48px;
+  width: 0; height: 0;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 14px solid var(--color-brand-blue);
+  z-index: 2;
+}
+.flow-icon {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: var(--color-brand-blue-light);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  border: 3px solid var(--color-brand-blue);
+}
+.flow-icon svg { width: 44px; height: 44px; color: var(--color-brand-blue); }
+.flow-num {
+  position: absolute; top: -4px; left: 50%; transform: translateX(22px);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--color-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+}
+.flow-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.flow-desc { font-size: 14px; color: var(--color-text-muted); line-height: 1.6; }
+
+/* Visual rank cards */
+.rank-cards { display: flex; gap: 24px; }
+.rank-card {
+  flex: 1; border-radius: 16px; overflow: hidden;
+  border: 2px solid var(--color-border); background: #fff;
+  text-align: center; transition: transform 0.2s, box-shadow 0.2s;
+}
+.rank-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.rank-card-header {
+  padding: 28px 20px 20px; color: #fff;
+}
+.rank-card-header.rank-a-bg { background: linear-gradient(135deg, #0088cc, #00adee); }
+.rank-card-header.rank-b-bg { background: linear-gradient(135deg, #00a085, #00b894); }
+.rank-card-header.rank-c-bg { background: linear-gradient(135deg, #e67e22, #f39c12); }
+.rank-letter { font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.rank-name { font-size: 18px; font-weight: 700; }
+.rank-card-body { padding: 20px; }
+.rank-card-body p { font-size: 14px; color: var(--color-text-muted); line-height: 1.7; }
+
+/* Topic cards (for warranty, payment, delivery) */
+.topic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.topic-card {
+  background: #fff; border: 1px solid var(--color-border); border-radius: 16px;
+  padding: 32px 28px; text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.topic-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.topic-icon {
+  width: 72px; height: 72px; border-radius: 16px;
+  background: var(--color-bg-subtle);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+}
+.topic-icon svg { width: 36px; height: 36px; color: var(--color-brand-blue); }
+.topic-title { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+.topic-desc { font-size: 14px; color: var(--color-text-muted); line-height: 1.7; text-align: left; }
+.topic-desc ul { padding-left: 18px; margin-top: 4px; }
+.topic-desc li { margin-bottom: 2px; }
+
+/* FAQ visual accordion */
+.faq-list { max-width: 800px; margin: 0 auto; }
+.faq-item {
+  border: 1px solid var(--color-border); border-radius: 12px;
+  margin-bottom: 12px; overflow: hidden; background: #fff;
+  transition: border-color 0.2s;
+}
+.faq-item.open { border-color: var(--color-brand-blue); }
+.faq-question {
+  width: 100%; background: none; border: none; padding: 20px 24px;
+  font-size: 15px; font-weight: 700; text-align: left; cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  font-family: 'Noto Sans JP', sans-serif; color: var(--color-text);
+}
+.faq-question:hover { color: var(--color-brand-blue); }
+.faq-q-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--color-brand-blue-light); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.faq-q-icon svg { width: 18px; height: 18px; color: var(--color-brand-blue); }
+.faq-q-text { flex: 1; }
+.faq-arrow {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--color-bg-subtle); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: transform 0.3s;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.faq-answer-inner {
+  padding: 0 24px 20px 74px; font-size: 14px; color: var(--color-text-muted); line-height: 1.8;
+}
+
+/* CTA */
+.cta-section {
+  background: linear-gradient(135deg, #e6f7fd, #fff, #fff3f3);
+  padding: 64px 20px; text-align: center;
+  border-top: 1px solid var(--color-border);
+}
+.cta-inner { max-width: 640px; margin: 0 auto; }
+.cta-inner h2 { font-size: 24px; font-weight: 700; margin-bottom: 14px; }
+.cta-inner p { font-size: 15px; color: var(--color-text-muted); margin-bottom: 28px; line-height: 1.7; }
+
+/* Footer */
+.footer { background: #2a2a2a; color: #ccc; padding: 48px 20px 24px; font-size: 13px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-top { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 32px; }
+.footer-logo { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+.footer-company { line-height: 1.8; }
+.footer-nav { display: flex; gap: 40px; }
+.footer-nav-col h4 { color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.footer-nav-col ul { list-style: none; }
+.footer-nav-col li { margin-bottom: 8px; }
+.footer-nav-col a { color: #aaa; font-size: 13px; }
+.footer-nav-col a:hover { color: #fff; }
+.footer-bottom {
+  border-top: 1px solid #444; padding-top: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: #888;
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">← 戻る</a>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+    <div class="header-search">
+      <button class="category-btn">全カテゴリ <span class="arrow">&#9660;</span></button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">検討リスト</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== BREADCRUMB ========== -->
+<div class="breadcrumb">
+  <a href="#">トップ</a><span>></span>ご利用ガイド
+</div>
+
+<!-- ========== PAGE HERO ========== -->
+<section class="page-hero">
+  <h1>ご利用ガイド</h1>
+  <p>中古理化学機器のご購入から納品まで、わかりやすくご案内します</p>
+</section>
+
+<!-- ========== ご利用の流れ (Horizontal visual flow) ========== -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-heading">ご利用の流れ</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="20" cy="20" r="12"/>
+            <path d="M29 29l10 10" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="flow-num">1</div>
+        <div class="flow-title">機器を探す</div>
+        <div class="flow-desc">サイトで気になる中古機器を検索</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M40 30a4 4 0 01-4 4H14l-8 8V10a4 4 0 014-4h26a4 4 0 014 4z"/>
+          </svg>
+        </div>
+        <div class="flow-num">2</div>
+        <div class="flow-title">お問い合わせ</div>
+        <div class="flow-desc">気になる商品をお問い合わせ</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M28 4H12a4 4 0 00-4 4v32a4 4 0 004 4h24a4 4 0 004-4V16z"/>
+            <polyline points="28 4 28 16 40 16"/>
+            <line x1="32" y1="26" x2="16" y2="26"/>
+            <line x1="32" y1="34" x2="16" y2="34"/>
+          </svg>
+        </div>
+        <div class="flow-num">3</div>
+        <div class="flow-title">確認・お見積り</div>
+        <div class="flow-desc">スタッフが状態確認、<br>お見積り提示</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="2" y="8" width="28" height="24"/>
+            <polygon points="30 16 38 16 44 22 44 32 30 32 30 16"/>
+            <circle cx="11" cy="36" r="5"/>
+            <circle cx="37" cy="36" r="5"/>
+          </svg>
+        </div>
+        <div class="flow-num">4</div>
+        <div class="flow-title">納品</div>
+        <div class="flow-desc">ご注文確定後、機器をお届け</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 商品の状態について (Visual rank cards) ========== -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <h2 class="section-heading">商品の状態について</h2>
+    <div class="rank-cards">
+      <div class="rank-card">
+        <div class="rank-card-header rank-a-bg">
+          <div class="rank-letter">A</div>
+          <div class="rank-name">美品</div>
+        </div>
+        <div class="rank-card-body">
+          <p>使用感が少なく、良好な状態</p>
+        </div>
+      </div>
+      <div class="rank-card">
+        <div class="rank-card-header rank-b-bg">
+          <div class="rank-letter">B</div>
+          <div class="rank-name">良品</div>
+        </div>
+        <div class="rank-card-body">
+          <p>多少の使用感があるが、機能に問題なし</p>
+        </div>
+      </div>
+      <div class="rank-card">
+        <div class="rank-card-header rank-c-bg">
+          <div class="rank-letter">C</div>
+          <div class="rank-name">使用感あり</div>
+        </div>
+        <div class="rank-card-body">
+          <p>使用感があるが、基本機能は動作確認済み</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 保証・支払い・配送 (Topic cards) ========== -->
+<section class="section">
+  <div class="section-inner">
+    <div class="topic-grid">
+      <div class="topic-card">
+        <div class="topic-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <div class="topic-title">保証・メンテナンス</div>
+        <div class="topic-desc">
+          <ul>
+            <li>商品により保証期間が異なります</li>
+            <li>メンテナンス・稼働保証付き商品多数</li>
+          </ul>
+        </div>
+      </div>
+      <div class="topic-card">
+        <div class="topic-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <div class="topic-title">お支払い方法</div>
+        <div class="topic-desc">
+          <ul>
+            <li>銀行振込</li>
+            <li>請求書払い（法人向け）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="topic-card">
+        <div class="topic-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <div class="topic-title">配送について</div>
+        <div class="topic-desc">
+          <p>配送方法や送料は商品のサイズ・配送先により異なります。詳細はお見積り時にご案内いたします。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <h2 class="section-heading">よくあるご質問</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M8 8a2 2 0 013.5 1.5c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg></span>
+          <span class="faq-q-text">中古機器の品質は大丈夫ですか？</span>
+          <span class="faq-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">商品の状態はランク（A〜C）で表示しており、各商品ページに詳細を記載しています。メンテナンス・稼働保証付きの商品も多数ございます。ご不明な点はお問い合わせください。</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M8 8a2 2 0 013.5 1.5c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg></span>
+          <span class="faq-q-text">返品はできますか？</span>
+          <span class="faq-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">商品の性質上、原則として返品はお受けしておりません。ご購入前に商品の状態を十分にご確認ください。商品説明と著しく異なる場合は個別にご対応いたします。</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M8 8a2 2 0 013.5 1.5c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg></span>
+          <span class="faq-q-text">納期はどのくらいですか？</span>
+          <span class="faq-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">在庫状況や配送先により異なります。在庫品は比較的短納期で出荷可能です。詳細はお見積り時にご案内いたします。</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M8 8a2 2 0 013.5 1.5c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg></span>
+          <span class="faq-q-text">見積書の発行はできますか？</span>
+          <span class="faq-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">はい、お見積書の発行は無料で承っております。お問い合わせフォームまたはお電話にてご依頼ください。</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M8 8a2 2 0 013.5 1.5c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg></span>
+          <span class="faq-q-text">法人でなくても購入できますか？</span>
+          <span class="faq-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">はい、個人のお客様でもご購入いただけます。お気軽にお問い合わせください。</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M8 8a2 2 0 013.5 1.5c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg></span>
+          <span class="faq-q-text">海外への発送は対応していますか？</span>
+          <span class="faq-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">海外発送については個別にご相談を承っております。詳しくはお問い合わせください。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA ========== -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>お問い合わせ</h2>
+    <p>商品に関するご質問やお見積りのご依頼など、<br>お気軽にお問い合わせください。</p>
+    <button class="btn-solid btn-xl">お問い合わせはこちら</button>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Co-LABO MAKER</div>
+        <div class="footer-company">
+          株式会社Co-LABO MAKER<br>
+          〒980-0811 宮城県仙台市青葉区一番町3-1-16<br>
+          〒101-0025 東京都千代田区神田佐久間町2-19<br><br>
+          中古理化学機器の販売・買取を通じて、<br>研究環境の発展に貢献します。
+        </div>
+      </div>
+      <nav class="footer-nav">
+        <div class="footer-nav-col">
+          <h4>サービス</h4>
+          <ul>
+            <li><a href="#">商品一覧</a></li>
+            <li><a href="#">買取査定</a></li>
+            <li><a href="#">ご利用ガイド</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4>企業情報</h4>
+          <ul>
+            <li><a href="#">会社概要</a></li>
+            <li><a href="#">お問い合わせ</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>古物商許可番号: 第○○○○○○○○号</span>
+      <span>&copy; 2026 Co-LABO MAKER Inc. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = this.closest('.faq-item');
+    var answer = item.querySelector('.faq-answer');
+    var isOpen = item.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(function(fi) {
+      fi.classList.remove('open');
+      fi.querySelector('.faq-answer').style.maxHeight = '0';
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+</script>
+</body>
+</html>

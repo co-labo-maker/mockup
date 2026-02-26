@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>HPLC カテゴリ一覧（パターンC: コンパクトリスト） - Co-LABO MAKER</title>
+<style>
+/* === base.css === */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23;
+  --color-primary-hover: #d41820;
+  --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee;
+  --color-brand-blue-hover: #009cd6;
+  --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f7f7;
+  --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8;
+  --color-border-strong: #c9c8c8;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-text-subtle: #828282;
+  --color-disabled: #adadad;
+  --color-success: #00d600;
+  --color-success-bg: #d9f8ec;
+  --color-warning: #fed802;
+  --color-warning-bg: #fffbdf;
+  --color-error: #ec1b23;
+  --color-error-bg: #fff3f3;
+  --color-info: #00adee;
+  --color-info-bg: #e6f7fd;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-width: 1280px;
+}
+.btn-solid {
+  background: var(--color-primary); color: white; border: none; border-radius: 999px;
+  font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-solid:hover { background: var(--color-primary-hover); }
+.btn-outline-primary {
+  background: white; color: var(--color-primary); border: 1px solid var(--color-primary);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-primary:hover { background: #fcddde; color: #d41820; border-color: #d41820; }
+.btn-outline-secondary {
+  background: white; color: var(--color-text-muted); border: 1px solid var(--color-text-muted);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-secondary:hover { background: #eceaea; }
+.btn-sm { height: 28px; min-width: 104px; padding: 0 12px; font-size: 14px; letter-spacing: 1px; }
+.btn-md { height: 36px; min-width: 120px; padding: 0 16px; font-size: 16px; letter-spacing: 1px; }
+.btn-lg { height: 48px; min-width: 136px; padding: 0 24px; font-size: 18px; letter-spacing: 0; }
+.btn-xl { height: 56px; min-width: 144px; padding: 0 28px; font-size: 18px; letter-spacing: 0; }
+
+/* === Page-specific === */
+body { background: var(--color-bg-subtle); font-size: 13px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+
+/* ── Header (approved design) ── */
+.header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); position: relative; z-index: 100; }
+.header-inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; height: 48px; border-bottom: 1px solid #eee; }
+.logo { font-size: 18px; font-weight: 700; color: #00ADEE; letter-spacing: -0.02em; }
+.logo span { color: #EC1B23; }
+.header-top-links { display: flex; gap: 18px; font-size: 12px; color: #666; }
+.header-top-links a { color: #666; font-size: 12px; }
+.header-top-links a:hover { color: #00ADEE; }
+.header-search { display: flex; align-items: center; height: 52px; gap: 0; }
+.category-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; background: #fff; border: 1px solid #ccc; border-right: none; border-radius: 4px 0 0 4px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; white-space: nowrap; transition: background .15s; font-family: inherit; }
+.category-btn:hover { background: #f9f9f9; }
+.search-input { flex: 1; height: 36px; border: 1px solid #ccc; border-left: none; border-right: none; padding: 0 12px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #00ADEE; }
+.search-btn { height: 36px; padding: 0 24px; background: #00ADEE; color: #fff; border: 1px solid #00ADEE; border-radius: 0 4px 4px 0; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.search-btn:hover { background: #009CD6; }
+.header-right-links { display: flex; align-items: center; gap: 16px; margin-left: 20px; white-space: nowrap; }
+.header-right-links a { font-size: 13px; color: #333; font-weight: 500; }
+.contact-link { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-width: 104px; padding: 0 28px; background: #fff; border: 1px solid #EC1B23; border-radius: 999px; color: #EC1B23 !important; font-weight: 700 !important; font-size: 12px; letter-spacing: 1px; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; }
+.contact-link:hover { background: #FFF0F0; text-decoration: none; }
+
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-bar { background: #fff; border-bottom: 1px solid #e5e7eb; }
+.breadcrumb-inner { max-width: 1280px; margin: 0 auto; padding: 10px 24px; }
+.breadcrumb { display: flex; align-items: center; font-size: 12px; color: var(--color-text-muted); }
+.breadcrumb a { color: var(--color-text-muted); border-bottom: 1px solid transparent; transition: color .15s, border-color .15s; }
+.breadcrumb a:hover { color: var(--color-brand-blue-hover); border-bottom-color: var(--color-brand-blue-hover); }
+.breadcrumb-sep { display: inline-flex; align-items: center; width: 18px; height: 18px; margin: 0 2px; }
+.breadcrumb-sep svg { width: 18px; height: 18px; fill: none; stroke: #999; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ===== MAIN LAYOUT ===== */
+.main-wrap { display: flex; max-width: 1280px; margin: 0 auto; min-height: calc(100vh - 100px - 33px - 48px); }
+
+/* ===== SIDEBAR (Accordion style) ===== */
+.sidebar { width: 240px; min-width: 240px; background: #fff; border-right: 1px solid #e5e7eb; overflow-y: auto; }
+
+.accordion-section { border-bottom: 1px solid #e5e7eb; }
+.accordion-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; cursor: pointer; user-select: none; font-size: 13px;
+  font-weight: 700; color: #111; transition: background .1s;
+}
+.accordion-header:hover { background: #f9f9f9; }
+.accordion-arrow {
+  font-size: 10px; color: #6b7280; transition: transform .2s;
+  display: inline-block;
+}
+.accordion-section.open .accordion-arrow { transform: rotate(180deg); }
+.accordion-body { display: none; padding: 0 14px 14px; }
+.accordion-section.open .accordion-body { display: block; }
+
+/* Filter items */
+.filter-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 12px; color: var(--color-text); cursor: pointer; }
+.filter-item input[type="checkbox"],
+.filter-item input[type="radio"] { accent-color: var(--color-brand-blue); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+.filter-item label { cursor: pointer; flex: 1; line-height: 1.4; }
+
+/* Category links in sidebar */
+.sidebar-cat-list { list-style: none; }
+.sidebar-cat-list li { padding: 0; }
+.sidebar-cat-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 0; font-size: 12px; color: var(--color-text); cursor: pointer;
+  transition: color .15s;
+}
+.sidebar-cat-link:hover { color: var(--color-brand-blue); }
+.sidebar-cat-link.active { color: var(--color-brand-blue); font-weight: 600; }
+.sidebar-cat-count { font-size: 11px; color: #9ca3af; }
+
+/* ===== CONTENT ===== */
+.content { flex: 1; padding: 16px 20px 32px; min-width: 0; }
+
+/* Result header */
+.result-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+}
+.result-title { font-size: 15px; font-weight: 700; color: #111; }
+.result-title em { font-style: normal; color: var(--color-brand-blue); }
+.result-count { color: #6b7280; font-weight: 400; }
+
+/* Sort bar */
+.sort-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 4px;
+  padding: 8px 14px; margin-bottom: 8px; font-size: 12px;
+}
+.sort-options { display: flex; align-items: center; gap: 4px; }
+.sort-option {
+  padding: 4px 10px; border: none; background: none; font-size: 12px;
+  color: var(--color-text-muted); cursor: pointer; border-radius: 3px;
+  font-family: inherit; transition: all .15s;
+}
+.sort-option:hover { background: #f3f4f6; }
+.sort-option.active { background: var(--color-brand-blue); color: #fff; font-weight: 600; }
+.sort-bar-info { color: #6b7280; }
+
+/* ===== COMPACT LIST ===== */
+.compact-list { display: flex; flex-direction: column; gap: 0; }
+
+.compact-item {
+  display: flex; align-items: center; background: #fff;
+  border: 1px solid #e5e7eb; border-bottom: none; padding: 10px 14px;
+  cursor: pointer; transition: background 0.1s; gap: 14px;
+}
+.compact-item:first-child { border-radius: 4px 4px 0 0; }
+.compact-item:last-child { border-bottom: 1px solid #e5e7eb; border-radius: 0 0 4px 4px; }
+.compact-item:hover { background: #fafbfc; }
+
+.compact-checkbox {
+  flex-shrink: 0;
+}
+.compact-checkbox input[type="checkbox"] {
+  width: 16px; height: 16px; accent-color: var(--color-brand-blue); cursor: pointer;
+}
+
+.compact-thumb {
+  width: 80px; height: 60px; min-width: 80px; background: #f0f1f3;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; border: 1px solid #e5e7eb; color: #c4c7cc; font-size: 10px;
+}
+
+.compact-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 16px; }
+
+.compact-text { flex: 1; min-width: 0; }
+.compact-maker { font-size: 11px; color: #6b7280; }
+.compact-name {
+  font-size: 13px; font-weight: 600; color: #111; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.compact-badge-col { flex-shrink: 0; width: 70px; text-align: center; }
+.product-badge {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 8px;
+  border-radius: 2px; letter-spacing: 0.02em; white-space: nowrap;
+}
+.badge-a { background: #dcfce7; color: #16a34a; }
+.badge-b { background: #dbeafe; color: #2563eb; }
+
+.compact-price-col { flex-shrink: 0; width: 160px; text-align: right; }
+.product-price { font-size: 15px; font-weight: 700; color: var(--color-primary); }
+.product-price-tax { font-size: 10px; font-weight: 400; color: #9ca3af; }
+.product-price-inquiry { font-size: 12px; font-weight: 600; color: var(--color-text-muted); }
+
+.compact-action-col { flex-shrink: 0; width: 140px; text-align: right; }
+.compact-action-col .btn-add-wishlist {
+  height: 28px; min-width: 130px; font-size: 11px;
+  letter-spacing: 0.5px; gap: 4px; transition: all .15s;
+}
+.compact-action-col .btn-add-wishlist.added {
+  background: var(--color-brand-blue-light); color: var(--color-brand-blue);
+  border-color: var(--color-brand-blue); pointer-events: none;
+}
+
+/* Bulk action bar */
+.bulk-action-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 14px; background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 4px; margin-bottom: 8px; font-size: 12px;
+}
+.bulk-action-bar label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--color-text-muted); }
+.bulk-action-bar input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--color-brand-blue); cursor: pointer; }
+.bulk-add-btn {
+  height: 26px; min-width: 140px; padding: 0 12px; font-size: 11px;
+  border-radius: 999px; border: 1px solid var(--color-brand-blue);
+  background: #fff; color: var(--color-brand-blue); font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.bulk-add-btn:hover { background: var(--color-brand-blue-light); }
+
+/* ===== PAGINATION ===== */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 28px; }
+.pagination a, .pagination span {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 4px; font-size: 14px; font-weight: 500;
+  color: var(--color-text); transition: background .15s, color .15s;
+}
+.pagination a:hover { background: #f3f4f6; }
+.pagination .active { background: var(--color-brand-blue); color: #fff; font-weight: 700; }
+.pagination .dots { color: #9ca3af; cursor: default; }
+.pagination .prev, .pagination .next { width: auto; padding: 0 12px; font-size: 13px; color: var(--color-brand-blue); font-weight: 600; }
+.pagination .prev:hover, .pagination .next:hover { background: var(--color-brand-blue-light); }
+.pagination .disabled { color: #d1d5db; pointer-events: none; }
+
+/* ===== FOOTER ===== */
+.footer { background: #1f2937; color: #9ca3af; text-align: center; padding: 24px 24px; font-size: 11px; margin-top: 32px; }
+.footer-links { margin-bottom: 8px; }
+.footer-links a { color: #9ca3af; margin: 0 8px; }
+.footer-links a:hover { color: #d1d5db; }
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+
+<!-- Floating overlay -->
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">← 戻る</a>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+    <div class="header-search">
+      <button class="category-btn">
+        全カテゴリ <span class="arrow">&#9660;</span>
+      </button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">検討リスト (3)</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb-inner">
+    <nav class="breadcrumb">
+      <a href="#">トップ</a>
+      <span class="breadcrumb-sep"><svg viewBox="0 0 18 18"><polyline points="7 4.5 11.5 9 7 13.5"/></svg></span>
+      <span style="color:#111;font-weight:500;">HPLC</span>
+    </nav>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- SIDEBAR (Accordion filters) -->
+  <aside class="sidebar">
+
+    <!-- Category -->
+    <div class="accordion-section open">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        サブカテゴリ
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <ul class="sidebar-cat-list">
+          <li><span class="sidebar-cat-link active">すべて <span class="sidebar-cat-count">(12)</span></span></li>
+          <li><span class="sidebar-cat-link">HPLCシステム <span class="sidebar-cat-count">(4)</span></span></li>
+          <li><span class="sidebar-cat-link">送液ユニット <span class="sidebar-cat-count">(1)</span></span></li>
+          <li><span class="sidebar-cat-link">検出器 <span class="sidebar-cat-count">(3)</span></span></li>
+          <li><span class="sidebar-cat-link">オートサンプラー <span class="sidebar-cat-count">(1)</span></span></li>
+          <li><span class="sidebar-cat-link">カラムオーブン <span class="sidebar-cat-count">(1)</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Maker -->
+    <div class="accordion-section open">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        メーカー
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <div class="filter-item"><input type="checkbox" id="mk-shimadzu" checked><label for="mk-shimadzu">島津製作所</label></div>
+        <div class="filter-item"><input type="checkbox" id="mk-agilent" checked><label for="mk-agilent">アジレント</label></div>
+        <div class="filter-item"><input type="checkbox" id="mk-waters" checked><label for="mk-waters">ウォーターズ</label></div>
+        <div class="filter-item"><input type="checkbox" id="mk-hitachi" checked><label for="mk-hitachi">日立</label></div>
+      </div>
+    </div>
+
+    <!-- Condition -->
+    <div class="accordion-section open">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        状態
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <div class="filter-item"><input type="checkbox" id="cond-a" checked><label for="cond-a">A 美品</label></div>
+        <div class="filter-item"><input type="checkbox" id="cond-b" checked><label for="cond-b">B 良品</label></div>
+        <div class="filter-item"><input type="checkbox" id="cond-c" checked><label for="cond-c">C 使用感あり</label></div>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="accordion-section">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        価格帯
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <div class="filter-item"><input type="radio" name="price" id="price-all" checked><label for="price-all">すべて</label></div>
+        <div class="filter-item"><input type="radio" name="price" id="price-50"><label for="price-50">〜50万円</label></div>
+        <div class="filter-item"><input type="radio" name="price" id="price-100"><label for="price-100">50万〜100万円</label></div>
+        <div class="filter-item"><input type="radio" name="price" id="price-over"><label for="price-over">100万円〜</label></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- Result header -->
+    <div class="result-header">
+      <div class="result-title">
+        <em>HPLC</em> の検索結果: <span class="result-count">12件</span>
+      </div>
+    </div>
+
+    <!-- Sort bar -->
+    <div class="sort-bar">
+      <div class="sort-options">
+        <span style="color:#6b7280;margin-right:4px;">並び替え:</span>
+        <button class="sort-option active">新着順</button>
+        <button class="sort-option" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">価格が安い順</button>
+        <button class="sort-option" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">価格が高い順</button>
+        <button class="sort-option" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">メーカー名順</button>
+      </div>
+      <div class="sort-bar-info">12件中 1-12件を表示</div>
+    </div>
+
+    <!-- Bulk action bar -->
+    <div class="bulk-action-bar">
+      <label><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"> すべて選択</label>
+      <button class="bulk-add-btn" onclick="bulkAddWishlist()">選択した商品を検討リストに追加</button>
+    </div>
+
+    <!-- COMPACT LIST -->
+    <div class="compact-list">
+
+      <!-- Item 1 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">島津製作所</div>
+            <div class="compact-name">高速液体クロマトグラフ LC-20AD</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;1,280,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">アジレント</div>
+            <div class="compact-name">HPLC 1260 Infinity II</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;980,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">ウォーターズ</div>
+            <div class="compact-name">Alliance e2695 HPLCシステム</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;1,450,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">島津製作所</div>
+            <div class="compact-name">Prominence HPLCシステム</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;850,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 5 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">日立</div>
+            <div class="compact-name">HPLC Chromaster 5110</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price-inquiry">価格はお問い合わせください</div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 6 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">アジレント</div>
+            <div class="compact-name">1100 Series HPLC</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;580,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 7 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">島津製作所</div>
+            <div class="compact-name">UV検出器 SPD-20A</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;380,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 8 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">ウォーターズ</div>
+            <div class="compact-name">2489 UV/Visible検出器</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;450,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 9 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">アジレント</div>
+            <div class="compact-name">DAD検出器 G7117A</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;620,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 10 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">島津製作所</div>
+            <div class="compact-name">オートサンプラー SIL-20AC</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;290,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 11 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">島津製作所</div>
+            <div class="compact-name">カラムオーブン CTO-20AC</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;180,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+      <!-- Item 12 -->
+      <div class="compact-item">
+        <div class="compact-checkbox"><input type="checkbox" class="item-check"></div>
+        <div class="compact-thumb">画像準備中</div>
+        <div class="compact-info">
+          <div class="compact-text">
+            <div class="compact-maker">日立</div>
+            <div class="compact-name">ポンプユニット L-2130</div>
+          </div>
+          <div class="compact-badge-col"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="compact-price-col"><div class="product-price">&yen;340,000<span class="product-price-tax">（税込）</span></div></div>
+          <div class="compact-action-col"><button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <nav class="pagination">
+      <a href="#" class="prev disabled">&larr; 前へ</a>
+      <span class="active">1</span>
+      <a href="#">2</a>
+      <a href="#" class="next">次へ &rarr;</a>
+    </nav>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#">会社概要</a>
+    <a href="#">利用規約</a>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">特定商取引法に基づく表記</a>
+    <a href="#">お問合せ</a>
+  </div>
+  <div>&copy; 2026 Co-LABO MAKER Inc. All rights reserved.</div>
+</footer>
+
+<script>
+/* === Accordion toggle === */
+function toggleAccordion(header) {
+  var section = header.parentElement;
+  section.classList.toggle('open');
+}
+
+/* === Select all === */
+function toggleSelectAll(el) {
+  var checks = document.querySelectorAll('.item-check');
+  checks.forEach(function(c) { c.checked = el.checked; });
+}
+
+/* === Bulk add to wishlist === */
+function bulkAddWishlist() {
+  var checks = document.querySelectorAll('.item-check:checked');
+  checks.forEach(function(c) {
+    var item = c.closest('.compact-item');
+    var btn = item.querySelector('.btn-add-wishlist');
+    if (btn && !btn.classList.contains('added')) {
+      btn.classList.add('added');
+      btn.innerHTML = '追加済み &#10003;';
+    }
+    c.checked = false;
+  });
+  document.getElementById('selectAll').checked = false;
+}
+
+/* === Wishlist toggle === */
+function toggleWishlist(btn, event) {
+  event.stopPropagation();
+  if (btn.classList.contains('added')) return;
+  btn.classList.add('added');
+  btn.innerHTML = '追加済み &#10003;';
+}
+</script>
+
+</body>
+</html>

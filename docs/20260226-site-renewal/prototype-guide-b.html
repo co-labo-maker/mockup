@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>ご利用ガイド｜Co-LABO MAKER - Pattern B FAQ重視</title>
+<style>
+/* ==========================================================
+   Co-LABO MAKER Design System - Base CSS
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282;
+  --color-disabled: #adadad;
+  --color-success: #00d600; --color-success-bg: #d9f8ec;
+  --color-warning: #fed802; --color-warning-bg: #fffbdf;
+  --color-error: #ec1b23; --color-error-bg: #fff3f3;
+  --color-info: #00adee; --color-info-bg: #e6f7fd;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-width: 1280px;
+}
+.btn-solid {
+  background: var(--color-primary); color: white; border: none; border-radius: 999px;
+  font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-solid:hover { background: var(--color-primary-hover); }
+.btn-outline-primary {
+  background: white; color: var(--color-primary); border: 1px solid var(--color-primary);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-primary:hover { background: #fcddde; color: #d41820; border-color: #d41820; }
+.btn-outline-secondary {
+  background: white; color: var(--color-text-muted); border: 1px solid var(--color-text-muted);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-secondary:hover { background: #eceaea; }
+.btn-sm { height: 28px; min-width: 104px; padding: 0 12px; font-size: 14px; letter-spacing: 1px; }
+.btn-md { height: 36px; min-width: 120px; padding: 0 16px; font-size: 16px; letter-spacing: 1px; }
+.btn-lg { height: 48px; min-width: 136px; padding: 0 24px; font-size: 18px; letter-spacing: 0; }
+.btn-xl { height: 56px; min-width: 144px; padding: 0 28px; font-size: 18px; letter-spacing: 0; }
+
+/* ========== Pattern B: FAQ重視 ========== */
+a { color: inherit; text-decoration: none; }
+
+/* ── Header (approved design) ── */
+.header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); position: relative; z-index: 100; }
+.header-inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; height: 48px; border-bottom: 1px solid #eee; }
+.logo { font-size: 18px; font-weight: 700; color: #00ADEE; letter-spacing: -0.02em; }
+.logo span { color: #EC1B23; }
+.header-top-links { display: flex; gap: 18px; font-size: 12px; color: #666; }
+.header-top-links a { color: #666; font-size: 12px; }
+.header-top-links a:hover { color: #00ADEE; }
+.header-search { display: flex; align-items: center; height: 52px; gap: 0; }
+.category-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; background: #fff; border: 1px solid #ccc; border-right: none; border-radius: 4px 0 0 4px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; white-space: nowrap; transition: background .15s; font-family: inherit; }
+.category-btn:hover { background: #f9f9f9; }
+.search-input { flex: 1; height: 36px; border: 1px solid #ccc; border-left: none; border-right: none; padding: 0 12px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #00ADEE; }
+.search-btn { height: 36px; padding: 0 24px; background: #00ADEE; color: #fff; border: 1px solid #00ADEE; border-radius: 0 4px 4px 0; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.search-btn:hover { background: #009CD6; }
+.header-right-links { display: flex; align-items: center; gap: 16px; margin-left: 20px; white-space: nowrap; }
+.header-right-links a { font-size: 13px; color: #333; font-weight: 500; }
+.contact-link { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-width: 104px; padding: 0 28px; background: #fff; border: 1px solid #EC1B23; border-radius: 999px; color: #EC1B23 !important; font-weight: 700 !important; font-size: 12px; letter-spacing: 1px; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; }
+.contact-link:hover { background: #FFF0F0; text-decoration: none; }
+
+
+/* Breadcrumb */
+.breadcrumb {
+  max-width: 1200px; margin: 0 auto; padding: 12px 20px;
+  font-size: 13px; color: var(--color-text-subtle);
+}
+.breadcrumb a { color: var(--color-text-subtle); }
+.breadcrumb a:hover { color: var(--color-brand-blue); }
+.breadcrumb span { margin: 0 6px; }
+
+/* Page hero */
+.page-hero {
+  background: var(--color-bg-subtle); border-bottom: 1px solid var(--color-border);
+  padding: 40px 20px; text-align: center;
+}
+.page-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.page-hero p { font-size: 15px; color: var(--color-text-muted); }
+
+/* Section */
+.section { padding: 48px 20px; }
+.section-inner { max-width: 960px; margin: 0 auto; }
+.section-alt { background: var(--color-bg-subtle); }
+.section-heading {
+  font-size: 24px; font-weight: 700; margin-bottom: 28px; text-align: center;
+  position: relative; padding-bottom: 14px;
+}
+.section-heading::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 48px; height: 3px; background: var(--color-brand-blue); border-radius: 2px;
+}
+
+/* FAQ Search */
+.faq-search-box {
+  max-width: 560px; margin: 0 auto 28px; position: relative;
+}
+.faq-search-input {
+  width: 100%; height: 52px; border: 2px solid var(--color-border);
+  border-radius: 10px; padding: 0 52px 0 20px; font-size: 15px;
+  font-family: 'Noto Sans JP', sans-serif; outline: none;
+  transition: border-color 0.2s;
+}
+.faq-search-input:focus { border-color: var(--color-brand-blue); }
+.faq-search-btn {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--color-text-subtle);
+}
+
+/* FAQ category tabs */
+.faq-tabs {
+  display: flex; gap: 10px; justify-content: center; margin-bottom: 36px; flex-wrap: wrap;
+}
+.faq-tab {
+  padding: 9px 22px; border-radius: 999px; font-size: 14px; font-weight: 700;
+  border: 1.5px solid var(--color-border); background: #fff; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif; color: var(--color-text-muted);
+  transition: all 0.2s;
+}
+.faq-tab:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+.faq-tab.active {
+  background: var(--color-brand-blue); color: #fff; border-color: var(--color-brand-blue);
+}
+
+/* FAQ group */
+.faq-group { margin-bottom: 32px; }
+.faq-group-label {
+  font-size: 15px; font-weight: 700; margin-bottom: 14px;
+  padding-left: 14px; border-left: 4px solid var(--color-brand-blue);
+}
+
+/* FAQ items */
+.faq-item {
+  border: 1px solid var(--color-border); border-radius: 10px;
+  margin-bottom: 10px; overflow: hidden; background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.faq-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.faq-item.open { border-color: var(--color-brand-blue); }
+.faq-question {
+  width: 100%; background: none; border: none; padding: 18px 24px;
+  font-size: 15px; font-weight: 700; text-align: left; cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  font-family: 'Noto Sans JP', sans-serif; color: var(--color-text);
+}
+.faq-question:hover { color: var(--color-brand-blue); }
+.q-badge {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--color-brand-blue); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; flex-shrink: 0;
+}
+.q-text { flex: 1; }
+.q-arrow {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--color-bg-subtle); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: transform 0.3s;
+}
+.faq-item.open .q-arrow { transform: rotate(180deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.faq-answer-inner {
+  padding: 0 24px 20px 68px; font-size: 14px; color: var(--color-text-muted); line-height: 1.8;
+}
+.a-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--color-primary-light); color: var(--color-primary);
+  font-size: 13px; font-weight: 700; margin-right: 8px; vertical-align: top;
+}
+.faq-no-results {
+  text-align: center; padding: 40px; color: var(--color-text-subtle); font-size: 14px;
+  display: none;
+}
+
+/* Compact steps */
+.steps-row {
+  display: flex; gap: 0; background: #fff; border: 1px solid var(--color-border);
+  border-radius: 12px; overflow: hidden;
+}
+.step-item {
+  flex: 1; padding: 28px 20px; text-align: center; position: relative;
+}
+.step-item:not(:last-child) { border-right: 1px solid var(--color-border); }
+.step-item:not(:last-child)::after {
+  content: ''; position: absolute; right: -14px; top: 50%; transform: translateY(-50%);
+  border-top: 10px solid transparent; border-bottom: 10px solid transparent;
+  border-left: 14px solid var(--color-brand-blue-light); z-index: 1;
+}
+.step-num {
+  width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 10px;
+  background: var(--color-brand-blue); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.step-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.step-desc { font-size: 13px; color: var(--color-text-muted); }
+
+/* Status ranks compact */
+.rank-row { display: flex; gap: 16px; }
+.rank-card {
+  flex: 1; background: #fff; border: 1px solid var(--color-border);
+  border-radius: 10px; padding: 24px; text-align: center;
+}
+.rank-badge-lg {
+  width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 22px; color: #fff;
+}
+.rank-a { background: var(--color-brand-blue); }
+.rank-b { background: #00b894; }
+.rank-c { background: #f39c12; }
+.rank-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.rank-desc { font-size: 13px; color: var(--color-text-muted); }
+
+/* Info grid */
+.info-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.info-box {
+  background: #fff; border: 1px solid var(--color-border); border-radius: 10px;
+  padding: 24px;
+}
+.info-box h3 {
+  font-size: 15px; font-weight: 700; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.info-box h3 svg { width: 20px; height: 20px; color: var(--color-brand-blue); flex-shrink: 0; }
+.info-box p, .info-box ul { font-size: 13px; color: var(--color-text-muted); line-height: 1.7; }
+.info-box ul { padding-left: 18px; }
+.info-box li { margin-bottom: 2px; }
+
+/* CTA */
+.cta-section {
+  background: linear-gradient(135deg, #005f8a 0%, #0088cc 40%, #00adee 100%);
+  padding: 56px 20px; text-align: center;
+}
+.cta-inner { max-width: 640px; margin: 0 auto; }
+.cta-inner h2 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+.cta-inner p { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 28px; line-height: 1.7; }
+.cta-white-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--color-primary); border: none; border-radius: 999px;
+  padding: 14px 36px; font-size: 16px; font-weight: 700; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.cta-white-btn:hover { background: #f5f5f5; }
+
+/* Footer */
+.footer { background: #2a2a2a; color: #ccc; padding: 48px 20px 24px; font-size: 13px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-top { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 32px; }
+.footer-logo { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+.footer-company { line-height: 1.8; }
+.footer-nav { display: flex; gap: 40px; }
+.footer-nav-col h4 { color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.footer-nav-col ul { list-style: none; }
+.footer-nav-col li { margin-bottom: 8px; }
+.footer-nav-col a { color: #aaa; font-size: 13px; }
+.footer-nav-col a:hover { color: #fff; }
+.footer-bottom {
+  border-top: 1px solid #444; padding-top: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: #888;
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">← 戻る</a>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+    <div class="header-search">
+      <button class="category-btn">全カテゴリ <span class="arrow">&#9660;</span></button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">検討リスト</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== BREADCRUMB ========== -->
+<div class="breadcrumb">
+  <a href="#">トップ</a><span>></span>ご利用ガイド
+</div>
+
+<!-- ========== PAGE HERO ========== -->
+<section class="page-hero">
+  <h1>ご利用ガイド</h1>
+  <p>よくあるご質問やご利用方法をまとめました</p>
+</section>
+
+<!-- ========== FAQ (Prominent Section) ========== -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-heading">よくあるご質問</h2>
+
+    <!-- Search box -->
+    <div class="faq-search-box">
+      <input type="text" class="faq-search-input" placeholder="質問を検索..." id="faqSearch">
+      <button class="faq-search-btn">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M14.5 14.5l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="faq-tabs">
+      <button class="faq-tab active" data-cat="all">すべて</button>
+      <button class="faq-tab" data-cat="purchase">ご購入について</button>
+      <button class="faq-tab" data-cat="quality">品質・状態について</button>
+      <button class="faq-tab" data-cat="logistics">配送・お支払いについて</button>
+    </div>
+
+    <!-- FAQ list -->
+    <div id="faqContainer">
+      <!-- ご購入について -->
+      <div class="faq-group" data-group="purchase">
+        <div class="faq-group-label">ご購入について</div>
+
+        <div class="faq-item" data-cat="purchase">
+          <button class="faq-question">
+            <span class="q-badge">Q</span>
+            <span class="q-text">法人でなくても購入できますか？</span>
+            <span class="q-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner"><span class="a-badge">A</span>はい、個人のお客様でもご購入いただけます。お気軽にお問い合わせください。</div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-cat="purchase">
+          <button class="faq-question">
+            <span class="q-badge">Q</span>
+            <span class="q-text">見積書の発行はできますか？</span>
+            <span class="q-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner"><span class="a-badge">A</span>はい、お見積書の発行は無料で承っております。お問い合わせフォームまたはお電話にてご依頼ください。</div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-cat="purchase">
+          <button class="faq-question">
+            <span class="q-badge">Q</span>
+            <span class="q-text">返品はできますか？</span>
+            <span class="q-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner"><span class="a-badge">A</span>商品の性質上、原則として返品はお受けしておりません。ご購入前に商品状態を十分ご確認ください。商品説明と著しく異なる場合は個別にご対応いたします。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 品質・状態について -->
+      <div class="faq-group" data-group="quality">
+        <div class="faq-group-label">品質・状態について</div>
+
+        <div class="faq-item" data-cat="quality">
+          <button class="faq-question">
+            <span class="q-badge">Q</span>
+            <span class="q-text">中古機器の品質は大丈夫ですか？</span>
+            <span class="q-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner"><span class="a-badge">A</span>商品の状態はランク（A〜C）で表示しており、各商品ページに詳細を記載しています。メンテナンス・稼働保証付きの商品も多数ございます。ご不明な点はお問い合わせください。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 配送・お支払いについて -->
+      <div class="faq-group" data-group="logistics">
+        <div class="faq-group-label">配送・お支払いについて</div>
+
+        <div class="faq-item" data-cat="logistics">
+          <button class="faq-question">
+            <span class="q-badge">Q</span>
+            <span class="q-text">納期はどのくらいですか？</span>
+            <span class="q-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner"><span class="a-badge">A</span>在庫状況や配送先により異なります。在庫品は比較的短納期で出荷可能です。詳細はお見積り時にご案内いたします。</div>
+          </div>
+        </div>
+
+        <div class="faq-item" data-cat="logistics">
+          <button class="faq-question">
+            <span class="q-badge">Q</span>
+            <span class="q-text">海外への発送は対応していますか？</span>
+            <span class="q-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner"><span class="a-badge">A</span>海外発送については個別にご相談を承っております。詳しくはお問い合わせください。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-no-results" id="faqNoResults">該当する質問が見つかりませんでした。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== COMPACT: ご利用の流れ ========== -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <h2 class="section-heading">ご利用の流れ</h2>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-title">機器を探す</div>
+        <div class="step-desc">サイトで気になる中古機器を検索</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-title">お問い合わせ</div>
+        <div class="step-desc">気になる商品をお問い合わせ</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-title">確認・お見積り</div>
+        <div class="step-desc">スタッフが状態確認、お見積り提示</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-title">納品</div>
+        <div class="step-desc">ご注文確定後、機器をお届け</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== COMPACT: 商品の状態 ========== -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-heading">商品の状態について</h2>
+    <div class="rank-row">
+      <div class="rank-card">
+        <div class="rank-badge-lg rank-a">A</div>
+        <div class="rank-name">美品</div>
+        <div class="rank-desc">使用感が少なく、良好な状態</div>
+      </div>
+      <div class="rank-card">
+        <div class="rank-badge-lg rank-b">B</div>
+        <div class="rank-name">良品</div>
+        <div class="rank-desc">多少の使用感があるが、機能に問題なし</div>
+      </div>
+      <div class="rank-card">
+        <div class="rank-badge-lg rank-c">C</div>
+        <div class="rank-name">使用感あり</div>
+        <div class="rank-desc">使用感があるが、基本機能は動作確認済み</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== COMPACT: Info cards ========== -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <div class="info-row">
+      <div class="info-box">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          保証・メンテナンス
+        </h3>
+        <ul>
+          <li>商品により保証期間が異なります</li>
+          <li>メンテナンス・稼働保証付き商品多数</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          お支払い方法
+        </h3>
+        <ul>
+          <li>銀行振込</li>
+          <li>請求書払い（法人向け）</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          配送について
+        </h3>
+        <p>配送方法・送料は商品サイズや配送先により異なります。詳細はお見積り時にご案内いたします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA ========== -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>お問い合わせ</h2>
+    <p>ご不明な点がございましたら、お気軽にお問い合わせください。<br>専門スタッフが丁寧にご対応いたします。</p>
+    <button class="cta-white-btn">お問い合わせはこちら</button>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Co-LABO MAKER</div>
+        <div class="footer-company">
+          株式会社Co-LABO MAKER<br>
+          〒980-0811 宮城県仙台市青葉区一番町3-1-16<br>
+          〒101-0025 東京都千代田区神田佐久間町2-19<br><br>
+          中古理化学機器の販売・買取を通じて、<br>研究環境の発展に貢献します。
+        </div>
+      </div>
+      <nav class="footer-nav">
+        <div class="footer-nav-col">
+          <h4>サービス</h4>
+          <ul>
+            <li><a href="#">商品一覧</a></li>
+            <li><a href="#">買取査定</a></li>
+            <li><a href="#">ご利用ガイド</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4>企業情報</h4>
+          <ul>
+            <li><a href="#">会社概要</a></li>
+            <li><a href="#">お問い合わせ</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>古物商許可番号: 第○○○○○○○○号</span>
+      <span>&copy; 2026 Co-LABO MAKER Inc. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = this.closest('.faq-item');
+    var answer = item.querySelector('.faq-answer');
+    var isOpen = item.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(function(fi) {
+      fi.classList.remove('open');
+      fi.querySelector('.faq-answer').style.maxHeight = '0';
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+
+// FAQ tabs
+document.querySelectorAll('.faq-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var cat = this.getAttribute('data-cat');
+
+    document.querySelectorAll('.faq-tab').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+    document.getElementById('faqSearch').value = '';
+
+    var anyVisible = false;
+    document.querySelectorAll('.faq-group').forEach(function(group) {
+      if (cat === 'all' || group.getAttribute('data-group') === cat) {
+        group.style.display = '';
+        anyVisible = true;
+      } else {
+        group.style.display = 'none';
+      }
+    });
+    document.querySelectorAll('.faq-item').forEach(function(item) { item.style.display = ''; });
+    document.getElementById('faqNoResults').style.display = anyVisible ? 'none' : 'block';
+  });
+});
+
+// FAQ search
+document.getElementById('faqSearch').addEventListener('input', function() {
+  var q = this.value.toLowerCase().trim();
+
+  document.querySelectorAll('.faq-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('.faq-tab[data-cat="all"]').classList.add('active');
+  document.querySelectorAll('.faq-group').forEach(function(g) { g.style.display = ''; });
+
+  if (!q) {
+    document.querySelectorAll('.faq-item').forEach(function(item) { item.style.display = ''; });
+    document.querySelectorAll('.faq-group').forEach(function(g) { g.style.display = ''; });
+    document.getElementById('faqNoResults').style.display = 'none';
+    return;
+  }
+
+  var anyVisible = false;
+  document.querySelectorAll('.faq-group').forEach(function(group) {
+    var groupVisible = false;
+    group.querySelectorAll('.faq-item').forEach(function(item) {
+      if (item.textContent.toLowerCase().indexOf(q) !== -1) {
+        item.style.display = '';
+        groupVisible = true;
+        anyVisible = true;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    group.style.display = groupVisible ? '' : 'none';
+  });
+  document.getElementById('faqNoResults').style.display = anyVisible ? 'none' : 'block';
+});
+</script>
+</body>
+</html>

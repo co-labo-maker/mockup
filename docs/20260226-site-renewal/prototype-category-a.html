@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>HPLC カテゴリ一覧（パターンA: サイドバー＋グリッド） - Co-LABO MAKER</title>
+<style>
+/* === base.css === */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23;
+  --color-primary-hover: #d41820;
+  --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee;
+  --color-brand-blue-hover: #009cd6;
+  --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f7f7;
+  --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8;
+  --color-border-strong: #c9c8c8;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-text-subtle: #828282;
+  --color-disabled: #adadad;
+  --color-success: #00d600;
+  --color-success-bg: #d9f8ec;
+  --color-warning: #fed802;
+  --color-warning-bg: #fffbdf;
+  --color-error: #ec1b23;
+  --color-error-bg: #fff3f3;
+  --color-info: #00adee;
+  --color-info-bg: #e6f7fd;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-width: 1280px;
+}
+.btn-solid {
+  background: var(--color-primary); color: white; border: none; border-radius: 999px;
+  font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-solid:hover { background: var(--color-primary-hover); }
+.btn-outline-primary {
+  background: white; color: var(--color-primary); border: 1px solid var(--color-primary);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-primary:hover { background: #fcddde; color: #d41820; border-color: #d41820; }
+.btn-outline-secondary {
+  background: white; color: var(--color-text-muted); border: 1px solid var(--color-text-muted);
+  border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-outline-secondary:hover { background: #eceaea; }
+.btn-sm { height: 28px; min-width: 104px; padding: 0 12px; font-size: 14px; letter-spacing: 1px; }
+.btn-md { height: 36px; min-width: 120px; padding: 0 16px; font-size: 16px; letter-spacing: 1px; }
+.btn-lg { height: 48px; min-width: 136px; padding: 0 24px; font-size: 18px; letter-spacing: 0; }
+.btn-xl { height: 56px; min-width: 144px; padding: 0 28px; font-size: 18px; letter-spacing: 0; }
+
+/* === Page-specific === */
+body { background: var(--color-bg-subtle); font-size: 13px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+
+/* ── Header (approved design) ── */
+.header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); position: relative; z-index: 100; }
+.header-inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; height: 48px; border-bottom: 1px solid #eee; }
+.logo { font-size: 18px; font-weight: 700; color: #00ADEE; letter-spacing: -0.02em; }
+.logo span { color: #EC1B23; }
+.header-top-links { display: flex; gap: 18px; font-size: 12px; color: #666; }
+.header-top-links a { color: #666; font-size: 12px; }
+.header-top-links a:hover { color: #00ADEE; }
+.header-search { display: flex; align-items: center; height: 52px; gap: 0; }
+.category-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; background: #fff; border: 1px solid #ccc; border-right: none; border-radius: 4px 0 0 4px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; white-space: nowrap; transition: background .15s; font-family: inherit; }
+.category-btn:hover { background: #f9f9f9; }
+.search-input { flex: 1; height: 36px; border: 1px solid #ccc; border-left: none; border-right: none; padding: 0 12px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #00ADEE; }
+.search-btn { height: 36px; padding: 0 24px; background: #00ADEE; color: #fff; border: 1px solid #00ADEE; border-radius: 0 4px 4px 0; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.search-btn:hover { background: #009CD6; }
+.header-right-links { display: flex; align-items: center; gap: 16px; margin-left: 20px; white-space: nowrap; }
+.header-right-links a { font-size: 13px; color: #333; font-weight: 500; }
+.contact-link { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-width: 104px; padding: 0 28px; background: #fff; border: 1px solid #EC1B23; border-radius: 999px; color: #EC1B23 !important; font-weight: 700 !important; font-size: 12px; letter-spacing: 1px; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; }
+.contact-link:hover { background: #FFF0F0; text-decoration: none; }
+
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-bar { background: #fff; border-bottom: 1px solid #e5e7eb; }
+.breadcrumb-inner { max-width: 1280px; margin: 0 auto; padding: 10px 24px; }
+.breadcrumb { display: flex; align-items: center; font-size: 12px; color: var(--color-text-muted); }
+.breadcrumb a { color: var(--color-text-muted); border-bottom: 1px solid transparent; transition: color .15s, border-color .15s; }
+.breadcrumb a:hover { color: var(--color-brand-blue-hover); border-bottom-color: var(--color-brand-blue-hover); }
+.breadcrumb-sep { display: inline-flex; align-items: center; width: 18px; height: 18px; margin: 0 2px; }
+.breadcrumb-sep svg { width: 18px; height: 18px; fill: none; stroke: #999; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ===== MAIN LAYOUT ===== */
+.main-wrap { display: flex; max-width: 1280px; margin: 0 auto; min-height: calc(100vh - 100px - 33px - 48px); }
+
+/* ===== SIDEBAR ===== */
+.sidebar { width: 240px; min-width: 240px; background: #fff; border-right: 1px solid #e5e7eb; overflow-y: auto; }
+.sidebar-section { border-bottom: 1px solid #e5e7eb; }
+.sidebar-section:last-child { border-bottom: none; }
+.sidebar-heading { font-size: 14px; font-weight: 700; padding: 14px 12px 10px; color: #111; }
+
+/* Category tree */
+.cat-tree { padding: 4px 0 16px; }
+.cat-item {
+  display: flex; align-items: center; padding: 5px 12px; cursor: pointer;
+  user-select: none; transition: background 0.1s; gap: 4px;
+}
+.cat-item:hover { background: #f3f4f6; }
+.cat-item.active { background: var(--color-brand-blue-light); color: var(--color-brand-blue); }
+.cat-item.active .cat-name { color: var(--color-brand-blue); font-weight: 600; }
+.cat-toggle { width: 16px; font-size: 10px; color: #6b7280; flex-shrink: 0; text-align: center; line-height: 1; }
+.cat-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cat-count { font-size: 11px; color: #9ca3af; margin-left: 4px; flex-shrink: 0; }
+.cat-large > .cat-item { padding-left: 12px; font-weight: 700; font-size: 13px; }
+.cat-medium > .cat-item { padding-left: 24px; font-weight: 400; font-size: 13px; }
+.cat-small > .cat-item { padding-left: 36px; font-weight: 400; font-size: 12px; }
+.cat-children { display: none; }
+.cat-children.open { display: block; }
+
+/* Filter sections */
+.filter-section { padding: 12px; }
+.filter-heading { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 8px; }
+.filter-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--color-text); cursor: pointer; }
+.filter-item input[type="checkbox"],
+.filter-item input[type="radio"] { accent-color: var(--color-brand-blue); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+.filter-item label { cursor: pointer; flex: 1; line-height: 1.4; }
+
+/* ===== CONTENT ===== */
+.content { flex: 1; padding: 16px 24px 32px; min-width: 0; }
+
+/* Result header */
+.result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+.result-title { font-size: 15px; font-weight: 700; color: #111; }
+.result-title em { font-style: normal; color: var(--color-brand-blue); }
+.result-count { color: #6b7280; font-weight: 400; }
+.result-controls { display: flex; align-items: center; gap: 12px; }
+.sort-select {
+  font-family: inherit; font-size: 12px; padding: 6px 10px;
+  border: 1px solid #d1d5db; border-radius: 3px; background: #fff;
+  color: #374151; cursor: pointer; outline: none;
+}
+.sort-select:focus { border-color: var(--color-brand-blue); }
+
+/* View toggle */
+.view-toggle { display: flex; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; }
+.view-toggle-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 30px; background: #fff; border: none; cursor: pointer;
+  color: #9ca3af; transition: background .15s, color .15s;
+}
+.view-toggle-btn:not(:last-child) { border-right: 1px solid #d1d5db; }
+.view-toggle-btn.active { background: var(--color-brand-blue); color: #fff; }
+.view-toggle-btn:hover:not(.active) { background: #f3f4f6; color: #6b7280; }
+.view-toggle-btn svg { width: 16px; height: 16px; }
+
+/* ===== PRODUCT GRID ===== */
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.product-grid:not(.active) { display: none; }
+.product-grid.active { display: grid; }
+
+.product-card {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+  overflow: hidden; cursor: pointer; transition: box-shadow 0.15s ease;
+}
+.product-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.10); }
+.product-thumb {
+  width: 100%; aspect-ratio: 4 / 3; background: #f0f1f3;
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid #e5e7eb; color: #c4c7cc; font-size: 12px;
+}
+.product-info { padding: 10px 12px 12px; }
+.product-maker { font-size: 11px; color: #6b7280; margin-bottom: 2px; }
+.product-name {
+  font-size: 13px; font-weight: 700; color: #111; margin-bottom: 4px; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.product-bottom { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.product-badge {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 8px;
+  border-radius: 2px; letter-spacing: 0.02em; white-space: nowrap;
+}
+.badge-a { background: #dcfce7; color: #16a34a; }
+.badge-b { background: #dbeafe; color: #2563eb; }
+.product-price { font-size: 16px; font-weight: 700; color: var(--color-primary); }
+.product-price-tax { font-size: 11px; font-weight: 400; color: #9ca3af; }
+.product-price-inquiry { font-size: 13px; font-weight: 600; color: var(--color-text-muted); }
+.product-card .btn-add-wishlist {
+  width: 100%; height: 32px; min-width: unset; font-size: 12px;
+  letter-spacing: 0.5px; gap: 4px; transition: all .15s;
+}
+.product-card .btn-add-wishlist.added {
+  background: var(--color-brand-blue-light); color: var(--color-brand-blue);
+  border-color: var(--color-brand-blue); pointer-events: none;
+}
+
+/* ===== PRODUCT LIST VIEW ===== */
+.product-list { display: none; flex-direction: column; gap: 12px; }
+.product-list.active { display: flex; }
+
+.product-list-card {
+  display: flex; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+  overflow: hidden; cursor: pointer; transition: box-shadow 0.15s ease;
+}
+.product-list-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.10); }
+.product-list-thumb {
+  width: 160px; min-width: 160px; height: 120px; background: #f0f1f3;
+  display: flex; align-items: center; justify-content: center;
+  border-right: 1px solid #e5e7eb; color: #c4c7cc; font-size: 12px;
+}
+.product-list-info { flex: 1; padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.product-list-row { display: flex; align-items: center; gap: 12px; }
+.product-list-info .product-maker { margin-bottom: 1px; }
+.product-list-info .product-name { font-size: 14px; margin-bottom: 3px; }
+.product-list-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.product-list-card .btn-add-wishlist {
+  height: 30px; min-width: 140px; font-size: 12px;
+  letter-spacing: 0.5px; gap: 4px; transition: all .15s;
+}
+.product-list-card .btn-add-wishlist.added {
+  background: var(--color-brand-blue-light); color: var(--color-brand-blue);
+  border-color: var(--color-brand-blue); pointer-events: none;
+}
+
+/* ===== PAGINATION ===== */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 28px; }
+.pagination a, .pagination span {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 4px; font-size: 14px; font-weight: 500;
+  color: var(--color-text); transition: background .15s, color .15s;
+}
+.pagination a:hover { background: #f3f4f6; }
+.pagination .active { background: var(--color-brand-blue); color: #fff; font-weight: 700; }
+.pagination .dots { color: #9ca3af; cursor: default; }
+.pagination .prev, .pagination .next { width: auto; padding: 0 12px; font-size: 13px; color: var(--color-brand-blue); font-weight: 600; }
+.pagination .prev:hover, .pagination .next:hover { background: var(--color-brand-blue-light); }
+.pagination .disabled { color: #d1d5db; pointer-events: none; }
+
+/* ===== FOOTER ===== */
+.footer { background: #1f2937; color: #9ca3af; text-align: center; padding: 24px 24px; font-size: 11px; margin-top: 32px; }
+.footer-links { margin-bottom: 8px; }
+.footer-links a { color: #9ca3af; margin: 0 8px; }
+.footer-links a:hover { color: #d1d5db; }
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+
+<!-- Floating overlay -->
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">← 戻る</a>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+    <div class="header-search">
+      <button class="category-btn">
+        全カテゴリ <span class="arrow">&#9660;</span>
+      </button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">検討リスト (3)</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb-inner">
+    <nav class="breadcrumb">
+      <a href="#">トップ</a>
+      <span class="breadcrumb-sep"><svg viewBox="0 0 18 18"><polyline points="7 4.5 11.5 9 7 13.5"/></svg></span>
+      <span style="color:#111;font-weight:500;">HPLC</span>
+    </nav>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Category tree -->
+    <div class="sidebar-section">
+      <div class="sidebar-heading">カテゴリで絞り込み</div>
+      <div class="cat-tree" id="catTree">
+        <div class="cat-large">
+          <div class="cat-item active">
+            <span class="cat-toggle" onclick="toggleCat(this.parentElement)">&#9662;</span>
+            <span class="cat-name">HPLC</span>
+            <span class="cat-count">(12)</span>
+          </div>
+          <div class="cat-children open">
+            <div class="cat-medium"><div class="cat-item"><span class="cat-toggle"></span><span class="cat-name">HPLCシステム</span><span class="cat-count">(4)</span></div></div>
+            <div class="cat-medium"><div class="cat-item"><span class="cat-toggle"></span><span class="cat-name">送液ユニット</span><span class="cat-count">(1)</span></div></div>
+            <div class="cat-medium"><div class="cat-item"><span class="cat-toggle"></span><span class="cat-name">検出器</span><span class="cat-count">(3)</span></div></div>
+            <div class="cat-medium"><div class="cat-item"><span class="cat-toggle"></span><span class="cat-name">オートサンプラー</span><span class="cat-count">(1)</span></div></div>
+            <div class="cat-medium"><div class="cat-item"><span class="cat-toggle"></span><span class="cat-name">カラムオーブン</span><span class="cat-count">(1)</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maker filter -->
+    <div class="sidebar-section">
+      <div class="filter-section">
+        <div class="filter-heading">メーカーで絞り込み</div>
+        <div class="filter-item"><input type="checkbox" id="maker-shimadzu" checked><label for="maker-shimadzu">島津製作所</label></div>
+        <div class="filter-item"><input type="checkbox" id="maker-agilent" checked><label for="maker-agilent">アジレント</label></div>
+        <div class="filter-item"><input type="checkbox" id="maker-waters" checked><label for="maker-waters">ウォーターズ</label></div>
+        <div class="filter-item"><input type="checkbox" id="maker-hitachi" checked><label for="maker-hitachi">日立</label></div>
+      </div>
+    </div>
+
+    <!-- Condition filter -->
+    <div class="sidebar-section">
+      <div class="filter-section">
+        <div class="filter-heading">状態で絞り込み</div>
+        <div class="filter-item"><input type="checkbox" id="cond-a" checked><label for="cond-a">A 美品</label></div>
+        <div class="filter-item"><input type="checkbox" id="cond-b" checked><label for="cond-b">B 良品</label></div>
+        <div class="filter-item"><input type="checkbox" id="cond-c" checked><label for="cond-c">C 使用感あり</label></div>
+      </div>
+    </div>
+
+    <!-- Price filter -->
+    <div class="sidebar-section">
+      <div class="filter-section">
+        <div class="filter-heading">価格帯</div>
+        <div class="filter-item"><input type="radio" name="price" id="price-all" checked><label for="price-all">すべて</label></div>
+        <div class="filter-item"><input type="radio" name="price" id="price-50"><label for="price-50">〜50万円</label></div>
+        <div class="filter-item"><input type="radio" name="price" id="price-100"><label for="price-100">50万〜100万円</label></div>
+        <div class="filter-item"><input type="radio" name="price" id="price-over"><label for="price-over">100万円〜</label></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- Result header -->
+    <div class="result-header">
+      <div class="result-title">
+        <em>HPLC</em> の検索結果: <span class="result-count">12件</span>
+      </div>
+      <div class="result-controls">
+        <select class="sort-select" id="sortSelect">
+          <option>新着順</option>
+          <option>価格が安い順</option>
+          <option>価格が高い順</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" id="viewGrid" onclick="switchView('grid')" title="グリッド表示">
+            <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          </button>
+          <button class="view-toggle-btn" id="viewList" onclick="switchView('list')" title="リスト表示">
+            <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1.5" width="14" height="3" rx="1"/><rect x="1" y="6.5" width="14" height="3" rx="1"/><rect x="1" y="11.5" width="14" height="3" rx="1"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRID VIEW -->
+    <div class="product-grid active" id="productGrid">
+
+      <!-- Card 1 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">高速液体クロマトグラフ LC-20AD</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price">&yen;1,280,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">アジレント</div>
+          <div class="product-name">HPLC 1260 Infinity II</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-b">B 良品</span>
+            <div class="product-price">&yen;980,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">ウォーターズ</div>
+          <div class="product-name">Alliance e2695 HPLCシステム</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price">&yen;1,450,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">Prominence HPLCシステム</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-b">B 良品</span>
+            <div class="product-price">&yen;850,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">日立</div>
+          <div class="product-name">HPLC Chromaster 5110</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price-inquiry">価格はお問い合わせください</div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">アジレント</div>
+          <div class="product-name">1100 Series HPLC</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-b">B 良品</span>
+            <div class="product-price">&yen;580,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">UV検出器 SPD-20A</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price">&yen;380,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">ウォーターズ</div>
+          <div class="product-name">2489 UV/Visible検出器</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price">&yen;450,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">アジレント</div>
+          <div class="product-name">DAD検出器 G7117A</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-b">B 良品</span>
+            <div class="product-price">&yen;620,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 10 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">オートサンプラー SIL-20AC</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price">&yen;290,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">カラムオーブン CTO-20AC</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-b">B 良品</span>
+            <div class="product-price">&yen;180,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+      <!-- Card 12 -->
+      <div class="product-card">
+        <div class="product-thumb">画像準備中</div>
+        <div class="product-info">
+          <div class="product-maker">日立</div>
+          <div class="product-name">ポンプユニット L-2130</div>
+          <div class="product-bottom">
+            <span class="product-badge badge-a">A 美品</span>
+            <div class="product-price">&yen;340,000<span class="product-price-tax">（税込）</span></div>
+          </div>
+          <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LIST VIEW -->
+    <div class="product-list" id="productList">
+
+      <!-- List Card 1 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">高速液体クロマトグラフ LC-20AD</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;1,280,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 2 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">アジレント</div>
+          <div class="product-name">HPLC 1260 Infinity II</div>
+          <div class="product-list-row"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;980,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 3 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">ウォーターズ</div>
+          <div class="product-name">Alliance e2695 HPLCシステム</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;1,450,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 4 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">Prominence HPLCシステム</div>
+          <div class="product-list-row"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;850,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 5 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">日立</div>
+          <div class="product-name">HPLC Chromaster 5110</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price-inquiry">価格はお問い合わせください</div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 6 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">アジレント</div>
+          <div class="product-name">1100 Series HPLC</div>
+          <div class="product-list-row"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;580,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 7 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">UV検出器 SPD-20A</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;380,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 8 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">ウォーターズ</div>
+          <div class="product-name">2489 UV/Visible検出器</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;450,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 9 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">アジレント</div>
+          <div class="product-name">DAD検出器 G7117A</div>
+          <div class="product-list-row"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;620,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 10 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">オートサンプラー SIL-20AC</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;290,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 11 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">島津製作所</div>
+          <div class="product-name">カラムオーブン CTO-20AC</div>
+          <div class="product-list-row"><span class="product-badge badge-b">B 良品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;180,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Card 12 -->
+      <div class="product-list-card">
+        <div class="product-list-thumb">画像準備中</div>
+        <div class="product-list-info">
+          <div class="product-maker">日立</div>
+          <div class="product-name">ポンプユニット L-2130</div>
+          <div class="product-list-row"><span class="product-badge badge-a">A 美品</span></div>
+          <div class="product-list-bottom">
+            <div class="product-price">&yen;340,000<span class="product-price-tax">（税込）</span></div>
+            <button class="btn-outline-primary btn-sm btn-add-wishlist" onclick="toggleWishlist(this, event)">検討リストに追加</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <nav class="pagination">
+      <a href="#" class="prev disabled">&larr; 前へ</a>
+      <span class="active">1</span>
+      <a href="#">2</a>
+      <a href="#" class="next">次へ &rarr;</a>
+    </nav>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#">会社概要</a>
+    <a href="#">利用規約</a>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">特定商取引法に基づく表記</a>
+    <a href="#">お問合せ</a>
+  </div>
+  <div>&copy; 2026 Co-LABO MAKER Inc. All rights reserved.</div>
+</footer>
+
+<script>
+/* === Category tree toggle === */
+function toggleCat(el) {
+  var parent = el.parentElement;
+  var children = parent.querySelector('.cat-children');
+  if (!children) return;
+  var toggle = el.querySelector('.cat-toggle');
+  if (!toggle) return;
+  var isOpen = children.classList.contains('open');
+  if (isOpen) {
+    children.classList.remove('open');
+    toggle.innerHTML = '\u25B8';
+  } else {
+    children.classList.add('open');
+    toggle.innerHTML = '\u25BE';
+  }
+}
+
+/* === Grid / List view toggle === */
+function switchView(mode) {
+  var grid = document.getElementById('productGrid');
+  var list = document.getElementById('productList');
+  var btnGrid = document.getElementById('viewGrid');
+  var btnList = document.getElementById('viewList');
+  if (mode === 'grid') {
+    grid.classList.add('active');
+    list.classList.remove('active');
+    btnGrid.classList.add('active');
+    btnList.classList.remove('active');
+  } else {
+    grid.classList.remove('active');
+    list.classList.add('active');
+    btnGrid.classList.remove('active');
+    btnList.classList.add('active');
+  }
+}
+
+/* === Wishlist toggle === */
+function toggleWishlist(btn, event) {
+  event.stopPropagation();
+  if (btn.classList.contains('added')) return;
+  btn.classList.add('added');
+  btn.innerHTML = '追加済み &#10003;';
+}
+</script>
+
+
+</body>
+</html>

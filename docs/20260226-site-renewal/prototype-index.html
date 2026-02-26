@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サイトリニューアル プロトタイプ一覧 - Co-LABO MAKER</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+:root {
+  --color-primary: #ec1b23;
+  --color-primary-hover: #d41820;
+  --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee;
+  --color-brand-blue-hover: #009cd6;
+  --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f7f7;
+  --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-text-subtle: #828282;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg-subtle);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Header === */
+.page-header {
+  background: linear-gradient(135deg, #00adee 0%, #009cd6 100%);
+  color: #fff;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+.page-header .logo { font-size: 14px; font-weight: 700; margin-bottom: 16px; opacity: 0.8; }
+.page-header .logo span { color: #fff; }
+.page-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.page-header p { font-size: 15px; opacity: 0.9; }
+
+/* === Meta Bar === */
+.meta-bar {
+  max-width: 1080px;
+  margin: -20px auto 0;
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  position: relative;
+  z-index: 1;
+}
+.meta-bar .meta-item { display: flex; align-items: center; gap: 6px; }
+.meta-bar .meta-value { font-weight: 700; color: var(--color-text); }
+
+/* === Page Section === */
+.page-section {
+  max-width: 1080px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+}
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 16px;
+  padding-left: 12px;
+  border-left: 4px solid var(--color-brand-blue);
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  padding-left: 16px;
+}
+
+/* === Pattern Grid === */
+.pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+/* === Card === */
+.card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.card-visual {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.card-visual .card-icon { font-size: 36px; opacity: 0.25; }
+.card-visual .pattern-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+.card-visual .page-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,0,0,0.4);
+}
+
+.card-body { padding: 14px 16px 16px; }
+.card-body h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--color-text); }
+.card-body p { font-size: 12px; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 8px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.card-tags .tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  background: var(--color-bg-subtle);
+  border-radius: 4px;
+  color: var(--color-text-subtle);
+}
+
+/* === Footer === */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+  border-top: 1px solid var(--color-border);
+  background: #fff;
+  margin-top: 48px;
+}
+
+@media (max-width: 800px) {
+  .pattern-grid { grid-template-columns: 1fr; }
+  .meta-bar { flex-direction: column; gap: 8px; align-items: center; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+
+<div class="page-header">
+  <div class="logo">Co-LABO <span>MAKER</span></div>
+  <h1>サイトリニューアル プロトタイプ一覧</h1>
+  <p>中古理化学機器ECプラットフォーム 5ページ × 3パターン</p>
+</div>
+
+<div class="meta-bar">
+  <div class="meta-item">
+    <span>生成日:</span>
+    <span class="meta-value">2026年2月27日</span>
+  </div>
+  <div class="meta-item">
+    <span>プロトタイプ数:</span>
+    <span class="meta-value">15ファイル（5ページ × 3パターン）</span>
+  </div>
+  <div class="meta-item">
+    <span>ベース:</span>
+    <span class="meta-value">category-ui-update デザイン</span>
+  </div>
+</div>
+
+<!-- ====== 1. TOP ====== -->
+<div class="page-section">
+  <div class="section-title">1. TOPページ</div>
+  <div class="section-subtitle">パターン軸: トーン違い（信頼重視 / 親しみやすい / モダン）</div>
+  <div class="pattern-grid">
+    <a href="prototype-top-a.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #005f8a, #00adee);">
+        <span class="card-icon">&#127968;</span>
+        <span class="pattern-badge" style="background: #005f8a;">A</span>
+        <span class="page-badge">TOP</span>
+      </div>
+      <div class="card-body">
+        <h3>A: 信頼重視・堅実</h3>
+        <p>白背景ベース、フォーマルなトーン、青グラデーションヒーロー、企業向けの落ち着いたデザイン</p>
+        <div class="card-tags">
+          <span class="tag">コーポレート</span>
+          <span class="tag">プロフェッショナル</span>
+          <span class="tag">青基調</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-top-b.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #e6f7fd, #fffbea);">
+        <span class="card-icon">&#127968;</span>
+        <span class="pattern-badge" style="background: #f96c07;">B</span>
+        <span class="page-badge">TOP</span>
+      </div>
+      <div class="card-body">
+        <h3>B: 親しみやすい・カジュアル</h3>
+        <p>温かい色味、丸みのあるカード、カジュアルな言葉遣い、クリーム系アクセント</p>
+        <div class="card-tags">
+          <span class="tag">フレンドリー</span>
+          <span class="tag">暖色系</span>
+          <span class="tag">丸み</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-top-c.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #0a1628, #1a3060);">
+        <span class="card-icon" style="color:#fff;">&#127968;</span>
+        <span class="pattern-badge" style="background: #ec1b23;">C</span>
+        <span class="page-badge">TOP</span>
+      </div>
+      <div class="card-body">
+        <h3>C: モダン・先進的</h3>
+        <p>ダークヒーロー、大胆なタイポグラフィ、テック感、英語ラベル併記</p>
+        <div class="card-tags">
+          <span class="tag">ダークモード</span>
+          <span class="tag">テック</span>
+          <span class="tag">モダン</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ====== 2. カテゴリ一覧 ====== -->
+<div class="page-section">
+  <div class="section-title">2. カテゴリ一覧ページ</div>
+  <div class="section-subtitle">パターン軸: レイアウト違い（サイドバー＋グリッド / フルワイドフィルター / コンパクトリスト）</div>
+  <div class="pattern-grid">
+    <a href="prototype-category-a.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #fff3f3, #fcddde);">
+        <span class="card-icon">&#128269;</span>
+        <span class="pattern-badge" style="background: #005f8a;">A</span>
+        <span class="page-badge">カテゴリ</span>
+      </div>
+      <div class="card-body">
+        <h3>A: サイドバー＋グリッド</h3>
+        <p>MonotaRO型。左サイドバーにカテゴリツリー＋フィルター、右に3カラム商品グリッド</p>
+        <div class="card-tags">
+          <span class="tag">サイドバー</span>
+          <span class="tag">ツリーフィルター</span>
+          <span class="tag">グリッド/リスト切替</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-category-b.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #e6f7fd, #d3f4ff);">
+        <span class="card-icon">&#128269;</span>
+        <span class="pattern-badge" style="background: #f96c07;">B</span>
+        <span class="page-badge">カテゴリ</span>
+      </div>
+      <div class="card-body">
+        <h3>B: トップフィルター＋フルワイド</h3>
+        <p>ZOZO型。水平フィルターバー＋バッジ表示、4カラムフルワイドグリッド</p>
+        <div class="card-tags">
+          <span class="tag">フルワイド</span>
+          <span class="tag">ピルフィルター</span>
+          <span class="tag">ミニマル</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-category-c.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #f7f7f7, #eceaea);">
+        <span class="card-icon">&#128269;</span>
+        <span class="pattern-badge" style="background: #ec1b23;">C</span>
+        <span class="page-badge">カテゴリ</span>
+      </div>
+      <div class="card-body">
+        <h3>C: コンパクトリスト</h3>
+        <p>高密度リスト表示。アコーディオン式サイドバー、テーブルに近い横長行レイアウト</p>
+        <div class="card-tags">
+          <span class="tag">高密度</span>
+          <span class="tag">アコーディオン</span>
+          <span class="tag">リスト形式</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ====== 3. 商品事例 ====== -->
+<div class="page-section">
+  <div class="section-title">3. 商品事例ページ</div>
+  <div class="section-subtitle">パターン軸: レイアウト違い（グリッドカタログ / 横型リスト / ギャラリー）</div>
+  <div class="pattern-grid">
+    <a href="prototype-example-a.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #d9f8ec, #b1f0d7);">
+        <span class="card-icon">&#128218;</span>
+        <span class="pattern-badge" style="background: #005f8a;">A</span>
+        <span class="page-badge">事例</span>
+      </div>
+      <div class="card-body">
+        <h3>A: グリッドカタログ</h3>
+        <p>3カラムグリッド。各カードに画像・スペック表・価格・お問い合わせボタン</p>
+        <div class="card-tags">
+          <span class="tag">3カラム</span>
+          <span class="tag">スペック表</span>
+          <span class="tag">商品カタログ</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-example-b.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #d9f8ec, #e6f7fd);">
+        <span class="card-icon">&#128218;</span>
+        <span class="pattern-badge" style="background: #f96c07;">B</span>
+        <span class="page-badge">事例</span>
+      </div>
+      <div class="card-body">
+        <h3>B: 横型リスト</h3>
+        <p>フルワイド横型カード。左に画像、右に詳細情報。比較しやすい密度の高いレイアウト</p>
+        <div class="card-tags">
+          <span class="tag">横型カード</span>
+          <span class="tag">情報密度高</span>
+          <span class="tag">比較しやすい</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-example-c.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #b1f0d7, #d3f4ff);">
+        <span class="card-icon">&#128218;</span>
+        <span class="pattern-badge" style="background: #ec1b23;">C</span>
+        <span class="page-badge">事例</span>
+      </div>
+      <div class="card-body">
+        <h3>C: ギャラリー形式</h3>
+        <p>画像大きめ、注目商品をヒーロー表示。写真で機器の状態を訴求するデザイン</p>
+        <div class="card-tags">
+          <span class="tag">ギャラリー</span>
+          <span class="tag">写真主体</span>
+          <span class="tag">ヒーロー商品</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ====== 4. 検討リスト ====== -->
+<div class="page-section">
+  <div class="section-title">4. 検討リストページ（比較モーダル含む）</div>
+  <div class="section-subtitle">パターン軸: レイアウト違い（縦リスト / カードグリッド / テーブル）</div>
+  <div class="pattern-grid">
+    <a href="prototype-selected-a.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #fffbdf, #fff7bc);">
+        <span class="card-icon">&#128203;</span>
+        <span class="pattern-badge" style="background: #005f8a;">A</span>
+        <span class="page-badge">検討リスト</span>
+      </div>
+      <div class="card-body">
+        <h3>A: 縦リスト型</h3>
+        <p>横長カード縦積み。チェックボックスで比較選択、モーダルで詳細比較</p>
+        <div class="card-tags">
+          <span class="tag">横長カード</span>
+          <span class="tag">比較モーダル</span>
+          <span class="tag">個別お問い合わせ</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-selected-b.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #fffbdf, #e6f7fd);">
+        <span class="card-icon">&#128203;</span>
+        <span class="pattern-badge" style="background: #f96c07;">B</span>
+        <span class="page-badge">検討リスト</span>
+      </div>
+      <div class="card-body">
+        <h3>B: カード型</h3>
+        <p>3カラムカードグリッド。画像大きめ、スライドアウト比較パネル</p>
+        <div class="card-tags">
+          <span class="tag">カードグリッド</span>
+          <span class="tag">スライドパネル</span>
+          <span class="tag">ホバー削除</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-selected-c.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #fff7bc, #fcddde);">
+        <span class="card-icon">&#128203;</span>
+        <span class="pattern-badge" style="background: #ec1b23;">C</span>
+        <span class="page-badge">検討リスト</span>
+      </div>
+      <div class="card-body">
+        <h3>C: テーブル型</h3>
+        <p>スプレッドシート風テーブル。ソート可能なカラム、データ密度重視</p>
+        <div class="card-tags">
+          <span class="tag">テーブル</span>
+          <span class="tag">ソート</span>
+          <span class="tag">データ密度</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ====== 5. ご利用ガイド ====== -->
+<div class="page-section">
+  <div class="section-title">5. ご利用ガイドページ</div>
+  <div class="section-subtitle">パターン軸: トーン違い（ステップ重視 / FAQ重視 / ビジュアルガイド）</div>
+  <div class="pattern-grid">
+    <a href="prototype-guide-a.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #e6f7fd, #b0e6fa);">
+        <span class="card-icon">&#128214;</span>
+        <span class="pattern-badge" style="background: #005f8a;">A</span>
+        <span class="page-badge">ガイド</span>
+      </div>
+      <div class="card-body">
+        <h3>A: ステップ重視</h3>
+        <p>大きなタイムライン形式のステップ解説。スティッキーサイドナビ、リニアな情報フロー</p>
+        <div class="card-tags">
+          <span class="tag">タイムライン</span>
+          <span class="tag">スティッキーナビ</span>
+          <span class="tag">リニアフロー</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-guide-b.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #d3f4ff, #e6f7fd);">
+        <span class="card-icon">&#128214;</span>
+        <span class="pattern-badge" style="background: #f96c07;">B</span>
+        <span class="page-badge">ガイド</span>
+      </div>
+      <div class="card-body">
+        <h3>B: FAQ重視</h3>
+        <p>FAQ検索・カテゴリフィルター付き。Q&Aバッジ、他セクションはコンパクト配置</p>
+        <div class="card-tags">
+          <span class="tag">FAQ検索</span>
+          <span class="tag">カテゴリタブ</span>
+          <span class="tag">Q&Aバッジ</span>
+        </div>
+      </div>
+    </a>
+    <a href="prototype-guide-c.html" class="card">
+      <div class="card-visual" style="background: linear-gradient(135deg, #b0e6fa, #d9f8ec);">
+        <span class="card-icon">&#128214;</span>
+        <span class="pattern-badge" style="background: #ec1b23;">C</span>
+        <span class="page-badge">ガイド</span>
+      </div>
+      <div class="card-body">
+        <h3>C: ビジュアルガイド</h3>
+        <p>大きなアイコン・イラスト中心。状態ランクを色分けカード表示、テキスト少なめ</p>
+        <div class="card-tags">
+          <span class="tag">アイコン重視</span>
+          <span class="tag">色分けカード</span>
+          <span class="tag">ビジュアル</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Co-LABO MAKER 中古理化学機器EC リニューアルプロトタイプ | 2026-02-27 生成 | 5ページ × 3パターン = 15ファイル</p>
+</div>
+
+</body>
+</html>

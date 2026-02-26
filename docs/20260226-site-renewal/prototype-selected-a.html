@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Co-LABO MAKER - 検討リスト（縦リスト型）</title>
+<style>
+/* ==========================================================
+   base.css
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282;
+  --color-disabled: #adadad;
+  --color-success: #00d600; --color-success-bg: #d9f8ec;
+  --color-warning: #fed802; --color-warning-bg: #fffbdf;
+  --color-error: #ec1b23; --color-error-bg: #fff3f3;
+  --color-info: #00adee; --color-info-bg: #e6f7fd;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.btn-solid { background: var(--color-primary); color: white; border: none; border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .15s; text-decoration: none; }
+.btn-solid:hover { background: var(--color-primary-hover); }
+.btn-solid:disabled { background: var(--color-disabled); cursor: not-allowed; }
+.btn-outline-primary { background: white; color: var(--color-primary); border: 1px solid var(--color-primary); border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .15s, color .15s, border-color .15s; text-decoration: none; }
+.btn-outline-primary:hover { background: #fcddde; color: #d41820; border-color: #d41820; }
+.btn-outline-primary:disabled { background: white; color: var(--color-disabled); border-color: var(--color-disabled); cursor: not-allowed; }
+.btn-outline-secondary { background: white; color: var(--color-text-muted); border: 1px solid var(--color-text-muted); border-radius: 999px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .15s; text-decoration: none; }
+.btn-outline-secondary:hover { background: #eceaea; }
+.btn-sm { height: 28px; min-width: 104px; padding: 0 12px; font-size: 14px; letter-spacing: 1px; }
+.btn-md { height: 36px; min-width: 120px; padding: 0 16px; font-size: 16px; letter-spacing: 1px; }
+.btn-lg { height: 48px; min-width: 136px; padding: 0 24px; font-size: 18px; letter-spacing: 0; }
+.btn-xl { height: 56px; min-width: 144px; padding: 0 28px; font-size: 18px; letter-spacing: 0; }
+
+/* ==========================================================
+   Page-specific styles — Pattern A: 縦リスト型
+   ========================================================== */
+a { color: var(--color-brand-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+body { background: var(--color-bg-subtle); min-width: 1280px; }
+
+/* ── Header (approved design) ── */
+.header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); position: relative; z-index: 100; }
+.header-inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; height: 48px; border-bottom: 1px solid #eee; }
+.logo { font-size: 18px; font-weight: 700; color: #00ADEE; letter-spacing: -0.02em; }
+.logo span { color: #EC1B23; }
+.header-top-links { display: flex; gap: 18px; font-size: 12px; color: #666; }
+.header-top-links a { color: #666; font-size: 12px; }
+.header-top-links a:hover { color: #00ADEE; }
+.header-search { display: flex; align-items: center; height: 52px; gap: 0; }
+.category-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; background: #fff; border: 1px solid #ccc; border-right: none; border-radius: 4px 0 0 4px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; white-space: nowrap; transition: background .15s; font-family: inherit; }
+.category-btn:hover { background: #f9f9f9; }
+.search-input { flex: 1; height: 36px; border: 1px solid #ccc; border-left: none; border-right: none; padding: 0 12px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #00ADEE; }
+.search-btn { height: 36px; padding: 0 24px; background: #00ADEE; color: #fff; border: 1px solid #00ADEE; border-radius: 0 4px 4px 0; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.search-btn:hover { background: #009CD6; }
+.header-right-links { display: flex; align-items: center; gap: 16px; margin-left: 20px; white-space: nowrap; }
+.header-right-links a { font-size: 13px; color: #333; font-weight: 500; }
+.contact-link { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-width: 104px; padding: 0 28px; background: #fff; border: 1px solid #EC1B23; border-radius: 999px; color: #EC1B23 !important; font-weight: 700 !important; font-size: 12px; letter-spacing: 1px; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; }
+.contact-link:hover { background: #FFF0F0; text-decoration: none; }
+
+
+/* Main */
+.main-content { max-width: 1280px; margin: 0 auto; padding: 24px 20px 60px; }
+.breadcrumb { display: flex; align-items: center; font-size: 12px; font-weight: 400; line-height: 1.4; color: #666; margin-bottom: 20px; }
+.breadcrumb a { color: #666; padding-bottom: 1px; border-bottom: 1px solid transparent; transition: color .15s, border-color .15s; }
+.breadcrumb a:hover { color: #009CD6; border-bottom-color: #009CD6; text-decoration: none; }
+.breadcrumb-sep { margin: 0 8px; color: #bbb; }
+
+/* Page Title */
+.page-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-brand-blue); }
+.page-title { font-size: 20px; font-weight: 700; color: var(--color-text); }
+.page-title-badge { background: var(--color-brand-blue); color: #fff; font-size: 13px; font-weight: 700; padding: 2px 12px; border-radius: 999px; }
+
+/* Action Bar */
+.action-bar { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 20px; margin-bottom: 16px; }
+.action-bar-left { display: flex; align-items: center; gap: 16px; }
+.action-bar-right { display: flex; align-items: center; gap: 12px; }
+.checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; cursor: pointer; user-select: none; }
+.checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--color-brand-blue); cursor: pointer; }
+.delete-selected-btn { background: none; border: none; color: var(--color-primary); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; padding: 4px 8px; border-radius: 4px; transition: background .15s; }
+.delete-selected-btn:hover { background: var(--color-primary-light); }
+
+/* Product Card */
+.product-card { display: flex; align-items: flex-start; background: #fff; border: 1px solid var(--color-border); border-radius: 8px; padding: 20px; margin-bottom: 12px; transition: box-shadow .2s, opacity .3s, transform .3s, max-height .3s; gap: 20px; overflow: hidden; }
+.product-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.product-card.is-removing { opacity: 0; transform: translateX(-30px); max-height: 0; padding-top: 0; padding-bottom: 0; margin-bottom: 0; border-color: transparent; }
+
+.product-card-checkbox { display: flex; align-items: center; padding-top: 50px; }
+.product-card-checkbox input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--color-brand-blue); cursor: pointer; }
+.product-card-img { width: 200px; min-width: 200px; height: 150px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 12px; }
+.product-card-body { flex: 1; min-width: 0; }
+.product-card-title { font-size: 16px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
+.product-card-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--color-text-muted); margin-bottom: 8px; }
+.product-card-meta-item { display: flex; align-items: center; gap: 4px; }
+.meta-label { color: var(--color-text-subtle); }
+.meta-value { color: var(--color-text); font-weight: 500; }
+.condition-badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; }
+.condition-a { background: #d9f8ec; color: #059669; }
+.condition-b { background: #fff7bc; color: #b45309; }
+
+.product-card-specs { display: flex; gap: 20px; font-size: 12px; color: var(--color-text-muted); margin-bottom: 10px; padding: 8px 12px; background: var(--color-bg-subtle); border-radius: 4px; }
+.spec-item { display: flex; gap: 4px; }
+.spec-label { color: var(--color-text-subtle); }
+.spec-value { color: var(--color-text); font-weight: 500; }
+
+.product-card-price { font-size: 20px; font-weight: 700; color: var(--color-primary); margin-bottom: 12px; }
+.product-card-price .tax { font-size: 12px; font-weight: 400; color: var(--color-text-muted); }
+
+.product-card-actions { display: flex; align-items: center; gap: 12px; }
+.delete-link { color: var(--color-primary); font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; font-family: inherit; padding: 4px 8px; border-radius: 4px; transition: background .15s, color .15s; }
+.delete-link:hover { background: var(--color-primary-light); color: var(--color-primary-hover); }
+
+/* Summary */
+.summary-area { background: #fff; border: 1px solid var(--color-border); border-radius: 8px; padding: 16px 20px; margin-top: 8px; margin-bottom: 40px; }
+.summary-row { display: flex; align-items: center; justify-content: space-between; }
+.summary-label { font-size: 14px; color: var(--color-text-muted); }
+.summary-count { font-size: 16px; font-weight: 700; color: var(--color-text); }
+
+/* Empty State */
+.empty-state { text-align: center; padding: 80px 20px; background: #fff; border: 1px solid var(--color-border); border-radius: 8px; }
+.empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
+.empty-state-title { font-size: 18px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
+.empty-state-text { font-size: 14px; color: var(--color-text-muted); margin-bottom: 24px; }
+
+/* Footer */
+.footer { background: #fff; border-top: 1px solid #e5e7eb; padding: 41px 24px 40px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.footer-main { max-width: 1152px; width: 1152px; display: flex; gap: 48px; padding-bottom: 41px; border-bottom: 1px solid #e5e7eb; }
+.footer-col { flex: 1; }
+.footer-heading { font-size: 16px; color: #666; line-height: 24px; margin-bottom: 4px; }
+.footer-text { font-size: 16px; color: #666; line-height: 24px; }
+.footer-text-lg { font-size: 19.5px; color: #666; line-height: 30px; }
+.footer-text-md { font-size: 18px; color: #666; line-height: 27px; }
+.footer-section { margin-bottom: 24px; }
+.footer-section:last-child { margin-bottom: 0; }
+.footer-link { font-size: 16px; color: #2563eb; line-height: 24px; text-decoration: underline; }
+.footer-bottom { text-align: center; font-size: 14px; color: #666; line-height: 21px; }
+
+/* Compare Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); z-index: 10000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity .25s ease; }
+.modal-overlay.is-visible { display: flex; opacity: 1; }
+.modal-overlay.is-entering { display: flex; opacity: 0; }
+.modal { background: #fff; border-radius: 12px; max-width: 960px; width: 95%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.25); transform: translateY(20px); transition: transform .25s ease; }
+.modal-overlay.is-visible .modal { transform: translateY(0); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 28px; border-bottom: 1px solid var(--color-border); }
+.modal-title { font-size: 18px; font-weight: 700; }
+.modal-close-btn { background: none; border: none; font-size: 24px; color: var(--color-text-muted); cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: background .15s; }
+.modal-close-btn:hover { background: var(--color-bg-muted); }
+.modal-body { padding: 24px 28px; overflow-x: auto; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.compare-table th, .compare-table td { padding: 12px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid #eee; }
+.compare-table th { background: var(--color-bg-subtle); font-weight: 600; color: var(--color-text-muted); white-space: nowrap; width: 120px; min-width: 120px; }
+.compare-table tr:nth-child(even) td { background: #fafafa; }
+.compare-table tr:nth-child(even) th { background: #f0f0f0; }
+.compare-table .compare-img { width: 100%; height: 100px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 11px; }
+.compare-table .product-name-header { font-weight: 700; font-size: 13px; color: var(--color-text); text-align: center; padding: 12px 8px; background: var(--color-brand-blue-light); }
+.compare-table .compare-price { font-weight: 700; color: var(--color-primary); font-size: 15px; }
+.compare-table .highlight-best { background: #e6f7fd; font-weight: 700; }
+.modal-footer { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 20px 28px; border-top: 1px solid var(--color-border); }
+body.modal-open { overflow: hidden; }
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+
+<!-- Floating overlay -->
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+    <div class="header-search">
+      <button class="category-btn">
+        全カテゴリ <span class="arrow">&#9660;</span>
+      </button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">検討リスト (3)</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== Main Content ====== -->
+<main class="main-content">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">トップ</a>
+    <span class="breadcrumb-sep">&gt;</span>
+    <span>検討リスト</span>
+  </div>
+
+  <!-- Page Title -->
+  <div class="page-title-row">
+    <h1 class="page-title">検討リスト</h1>
+    <span class="page-title-badge" id="titleBadge">3件</span>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar" id="actionBar">
+    <div class="action-bar-left">
+      <label class="checkbox-label">
+        <input type="checkbox" id="selectAll" />
+        全て選択
+      </label>
+      <button class="delete-selected-btn" onclick="deleteSelected()">選択削除</button>
+    </div>
+    <div class="action-bar-right">
+      <button class="btn-outline-primary btn-md" id="compareBtn" onclick="openCompareModal()">選択した商品を比較する</button>
+    </div>
+  </div>
+
+  <!-- Product List -->
+  <div id="productList">
+
+    <!-- Product 1 -->
+    <div class="product-card" data-id="1">
+      <div class="product-card-checkbox">
+        <input type="checkbox" class="product-checkbox" data-id="1" />
+      </div>
+      <div class="product-card-img">画像準備中</div>
+      <div class="product-card-body">
+        <div class="product-card-title">島津製作所 高速液体クロマトグラフ LC-20AD</div>
+        <div class="product-card-meta">
+          <div class="product-card-meta-item">
+            <span class="meta-label">型番:</span>
+            <span class="meta-value">LC-20AD</span>
+          </div>
+          <div class="product-card-meta-item">
+            <span class="meta-label">状態:</span>
+            <span class="condition-badge condition-a">A 美品</span>
+          </div>
+          <div class="product-card-meta-item">
+            <span class="meta-label">カテゴリ:</span>
+            <span class="meta-value">HPLC &gt; 送液ユニット</span>
+          </div>
+        </div>
+        <div class="product-card-specs">
+          <div class="spec-item"><span class="spec-label">流量範囲:</span><span class="spec-value">0.001-10mL/min</span></div>
+          <div class="spec-item"><span class="spec-label">最大圧力:</span><span class="spec-value">40MPa</span></div>
+          <div class="spec-item"><span class="spec-label">検出器:</span><span class="spec-value">UV-VIS対応</span></div>
+        </div>
+        <div class="product-card-price">&#165;1,280,000 <span class="tax">(税込)</span></div>
+        <div class="product-card-actions">
+          <button class="btn-outline-primary btn-sm" onclick="alert('お問い合わせフォームへ遷移します（プロトタイプ）')">お問い合わせ</button>
+          <a href="#" class="btn-outline-secondary btn-sm" onclick="return false;">詳細を見る</a>
+          <button class="delete-link" onclick="removeProduct(1)">&#10005; 削除</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card" data-id="2">
+      <div class="product-card-checkbox">
+        <input type="checkbox" class="product-checkbox" data-id="2" />
+      </div>
+      <div class="product-card-img">画像準備中</div>
+      <div class="product-card-body">
+        <div class="product-card-title">アジレント HPLC 1260 Infinity II</div>
+        <div class="product-card-meta">
+          <div class="product-card-meta-item">
+            <span class="meta-label">型番:</span>
+            <span class="meta-value">1260 Infinity II</span>
+          </div>
+          <div class="product-card-meta-item">
+            <span class="meta-label">状態:</span>
+            <span class="condition-badge condition-b">B 良品</span>
+          </div>
+          <div class="product-card-meta-item">
+            <span class="meta-label">カテゴリ:</span>
+            <span class="meta-value">HPLC &gt; HPLCシステム</span>
+          </div>
+        </div>
+        <div class="product-card-specs">
+          <div class="spec-item"><span class="spec-label">流量範囲:</span><span class="spec-value">0.001-10mL/min</span></div>
+          <div class="spec-item"><span class="spec-label">最大圧力:</span><span class="spec-value">60MPa</span></div>
+          <div class="spec-item"><span class="spec-label">検出器:</span><span class="spec-value">DAD対応</span></div>
+        </div>
+        <div class="product-card-price">&#165;980,000 <span class="tax">(税込)</span></div>
+        <div class="product-card-actions">
+          <button class="btn-outline-primary btn-sm" onclick="alert('お問い合わせフォームへ遷移します（プロトタイプ）')">お問い合わせ</button>
+          <a href="#" class="btn-outline-secondary btn-sm" onclick="return false;">詳細を見る</a>
+          <button class="delete-link" onclick="removeProduct(2)">&#10005; 削除</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card" data-id="3">
+      <div class="product-card-checkbox">
+        <input type="checkbox" class="product-checkbox" data-id="3" />
+      </div>
+      <div class="product-card-img">画像準備中</div>
+      <div class="product-card-body">
+        <div class="product-card-title">ウォーターズ Alliance e2695 HPLCシステム</div>
+        <div class="product-card-meta">
+          <div class="product-card-meta-item">
+            <span class="meta-label">型番:</span>
+            <span class="meta-value">e2695</span>
+          </div>
+          <div class="product-card-meta-item">
+            <span class="meta-label">状態:</span>
+            <span class="condition-badge condition-a">A 美品</span>
+          </div>
+          <div class="product-card-meta-item">
+            <span class="meta-label">カテゴリ:</span>
+            <span class="meta-value">HPLC &gt; HPLCシステム</span>
+          </div>
+        </div>
+        <div class="product-card-specs">
+          <div class="spec-item"><span class="spec-label">流量範囲:</span><span class="spec-value">0.01-10mL/min</span></div>
+          <div class="spec-item"><span class="spec-label">最大圧力:</span><span class="spec-value">41MPa</span></div>
+          <div class="spec-item"><span class="spec-label">検出器:</span><span class="spec-value">UV/PDA対応</span></div>
+        </div>
+        <div class="product-card-price">&#165;1,450,000 <span class="tax">(税込)</span></div>
+        <div class="product-card-actions">
+          <button class="btn-outline-primary btn-sm" onclick="alert('お問い合わせフォームへ遷移します（プロトタイプ）')">お問い合わせ</button>
+          <a href="#" class="btn-outline-secondary btn-sm" onclick="return false;">詳細を見る</a>
+          <button class="delete-link" onclick="removeProduct(3)">&#10005; 削除</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-area" id="summaryArea">
+    <div class="summary-row">
+      <div class="summary-label">リスト内商品: <strong id="summaryCount">3</strong> 件</div>
+    </div>
+  </div>
+
+  <!-- Empty State (hidden by default) -->
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="empty-state-icon">&#128269;</div>
+    <div class="empty-state-title">検討リストは空です</div>
+    <div class="empty-state-text">気になる商品を検討リストに追加してみましょう</div>
+    <a href="#" class="btn-solid btn-lg" onclick="return false;">商品を探す</a>
+  </div>
+
+</main>
+
+<!-- ====== Footer ====== -->
+<footer class="footer">
+  <div class="footer-main">
+    <div class="footer-col">
+      <div class="footer-section">
+        <div class="footer-heading">会社名</div>
+        <div class="footer-text-lg">株式会社Co-LABO MAKER</div>
+        <div class="footer-text-md">（コラボメーカー）</div>
+      </div>
+      <div class="footer-section">
+        <div class="footer-heading">住所</div>
+        <div class="footer-text">[本社]〒980-0803</div>
+        <div class="footer-text">宮城県仙台市青葉区国分町1丁目4-9 enspace</div>
+        <br>
+        <div class="footer-text">[東京]〒136-0082</div>
+        <div class="footer-text">東京都江東区新木場1-18-6</div>
+        <div class="footer-text">ライフサイエンスハブ新木場7F office10</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-section">
+        <div class="footer-heading">事業内容</div>
+        <div class="footer-text">実験機器・設備および技術のシェアリングプラットフォーム 「Co-LABO MAKER」の企画・開発・運営。 中古機器・試薬・資材の売買。</div>
+      </div>
+      <div class="footer-section">
+        <div class="footer-heading">公式サイト</div>
+        <a class="footer-link" href="#">https://reuse.co-labo-maker.com</a>
+        <div class="footer-text">中古機器・試薬・資材の売買について、ご覧いただけます。</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>（古物商営業許可）株式会社Co-LABO MAKER 宮城県公安委員会許可証 第221000001439号</div>
+    <div>Copyright 2025 Co-LABO MAKER</div>
+  </div>
+</footer>
+
+<!-- ====== Compare Modal ====== -->
+<div class="modal-overlay" id="compareModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">商品比較</div>
+      <button class="modal-close-btn" onclick="closeCompareModal()">&#10005;</button>
+    </div>
+    <div class="modal-body" id="compareModalBody">
+      <!-- Dynamically populated -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline-secondary btn-md" onclick="closeCompareModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Product Data ──
+var productsData = {
+  1: { id:1, name:'島津製作所 高速液体クロマトグラフ LC-20AD', maker:'島津製作所', model:'LC-20AD', condition:'A 美品', conditionClass:'condition-a', price:1280000, priceStr:'¥1,280,000', flow:'0.001-10mL/min', pressure:'40MPa', detector:'UV-VIS対応', accessories:'マニュアル、接続ケーブル', years:'約3年', warranty:'6ヶ月保証' },
+  2: { id:2, name:'アジレント HPLC 1260 Infinity II', maker:'アジレント', model:'1260 Infinity II', condition:'B 良品', conditionClass:'condition-b', price:980000, priceStr:'¥980,000', flow:'0.001-10mL/min', pressure:'60MPa', detector:'DAD対応', accessories:'マニュアル、カラム付き', years:'約5年', warranty:'3ヶ月保証' },
+  3: { id:3, name:'ウォーターズ Alliance e2695 HPLCシステム', maker:'ウォーターズ', model:'e2695', condition:'A 美品', conditionClass:'condition-a', price:1450000, priceStr:'¥1,450,000', flow:'0.01-10mL/min', pressure:'41MPa', detector:'UV/PDA対応', accessories:'マニュアル、ソフトウェアCD', years:'約2年', warranty:'6ヶ月保証' }
+};
+
+var selectAllCheckbox = document.getElementById('selectAll');
+
+// ── Select All ──
+selectAllCheckbox.addEventListener('change', function() {
+  var cbs = document.querySelectorAll('.product-checkbox');
+  for (var i = 0; i < cbs.length; i++) cbs[i].checked = this.checked;
+  updateUI();
+});
+
+// ── Individual checkbox ──
+document.addEventListener('change', function(e) {
+  if (e.target.classList.contains('product-checkbox')) {
+    syncSelectAll();
+    updateUI();
+  }
+});
+
+function syncSelectAll() {
+  var cbs = document.querySelectorAll('.product-checkbox');
+  var all = true;
+  for (var i = 0; i < cbs.length; i++) { if (!cbs[i].checked) { all = false; break; } }
+  selectAllCheckbox.checked = cbs.length > 0 && all;
+}
+
+function updateUI() {
+  var totalCards = document.querySelectorAll('.product-card').length;
+  document.getElementById('titleBadge').textContent = totalCards + '件';
+  document.getElementById('headerBadge').textContent = totalCards;
+  document.getElementById('summaryCount').textContent = totalCards;
+
+  // Show/hide empty state
+  if (totalCards === 0) {
+    document.getElementById('emptyState').style.display = '';
+    document.getElementById('actionBar').style.display = 'none';
+    document.getElementById('summaryArea').style.display = 'none';
+  } else {
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('actionBar').style.display = '';
+    document.getElementById('summaryArea').style.display = '';
+  }
+}
+
+// ── Remove Product ──
+function removeProduct(id) {
+  var card = document.querySelector('.product-card[data-id="' + id + '"]');
+  if (!card) return;
+  card.classList.add('is-removing');
+  setTimeout(function() {
+    card.remove();
+    syncSelectAll();
+    updateUI();
+  }, 350);
+}
+
+// ── Delete Selected ──
+function deleteSelected() {
+  var checked = document.querySelectorAll('.product-checkbox:checked');
+  if (checked.length === 0) { alert('削除する商品を選択してください'); return; }
+  for (var i = 0; i < checked.length; i++) checked[i].closest('.product-card').classList.add('is-removing');
+  setTimeout(function() {
+    var checked2 = document.querySelectorAll('.product-checkbox:checked');
+    for (var i = 0; i < checked2.length; i++) checked2[i].closest('.product-card').remove();
+    selectAllCheckbox.checked = false;
+    updateUI();
+  }, 350);
+}
+
+// ── Compare Modal ──
+var compareModal = document.getElementById('compareModal');
+
+function openCompareModal() {
+  var checked = document.querySelectorAll('.product-checkbox:checked');
+  if (checked.length < 2) { alert('比較するには2件以上の商品を選択してください'); return; }
+
+  // Build table dynamically
+  var ids = [];
+  for (var i = 0; i < checked.length; i++) ids.push(parseInt(checked[i].getAttribute('data-id')));
+
+  var specs = [
+    { label:'画像', key:'image' },
+    { label:'メーカー', key:'maker' },
+    { label:'型番', key:'model' },
+    { label:'状態', key:'condition' },
+    { label:'価格', key:'priceStr' },
+    { label:'流量範囲', key:'flow' },
+    { label:'最大圧力', key:'pressure' },
+    { label:'検出器', key:'detector' },
+    { label:'付属品', key:'accessories' },
+    { label:'使用年数', key:'years' },
+    { label:'保証', key:'warranty' }
+  ];
+
+  var html = '<table class="compare-table"><thead><tr><th></th>';
+  for (var i = 0; i < ids.length; i++) {
+    var p = productsData[ids[i]];
+    html += '<td class="product-name-header">' + p.model + '</td>';
+  }
+  html += '</tr></thead><tbody>';
+
+  for (var s = 0; s < specs.length; s++) {
+    html += '<tr><th>' + specs[s].label + '</th>';
+    for (var j = 0; j < ids.length; j++) {
+      var p = productsData[ids[j]];
+      if (specs[s].key === 'image') {
+        html += '<td><div class="compare-img">画像準備中</div></td>';
+      } else if (specs[s].key === 'condition') {
+        html += '<td><span class="condition-badge ' + p.conditionClass + '">' + p.condition + '</span></td>';
+      } else if (specs[s].key === 'priceStr') {
+        html += '<td class="compare-price">' + p.priceStr + '</td>';
+      } else {
+        html += '<td>' + p[specs[s].key] + '</td>';
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+
+  document.getElementById('compareModalBody').innerHTML = html;
+
+  // Show
+  compareModal.classList.add('is-entering');
+  document.body.classList.add('modal-open');
+  compareModal.offsetHeight; // reflow
+  compareModal.classList.remove('is-entering');
+  compareModal.classList.add('is-visible');
+}
+
+function closeCompareModal() {
+  compareModal.classList.remove('is-visible');
+  document.body.classList.remove('modal-open');
+}
+
+compareModal.addEventListener('click', function(e) {
+  if (e.target === compareModal) closeCompareModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && compareModal.classList.contains('is-visible')) closeCompareModal();
+});
+</script>
+</body>
+</html>
