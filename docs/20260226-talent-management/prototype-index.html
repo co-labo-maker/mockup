@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co-LABO Talent - タレントマネジメントシステム プロトタイプ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-brand-blue: #00adee;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7;
+  --color-border: #d8d8d8; --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, sans-serif;
+  color: var(--color-text); background: var(--color-bg-subtle);
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+.hero {
+  text-align: center; margin-bottom: 40px;
+}
+.hero-logo {
+  width: 56px; height: 56px; background: var(--color-brand-blue); border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 20px; margin: 0 auto 16px;
+}
+.hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.hero p { font-size: 14px; color: var(--color-text-muted); }
+.hero .meta { font-size: 12px; color: var(--color-text-subtle); margin-top: 8px; }
+
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: #fff; border-radius: 12px; padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  text-decoration: none; color: inherit;
+  transition: box-shadow 0.15s, transform 0.15s;
+  display: block;
+  border-left: 4px solid transparent;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+.card .card-num {
+  font-size: 11px; font-weight: 700; color: var(--color-brand-blue);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+}
+.card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.card p { font-size: 12px; color: var(--color-text-muted); line-height: 1.5; }
+.card .card-tag {
+  display: inline-block; margin-top: 8px; padding: 2px 8px;
+  border-radius: 4px; font-size: 10px; font-weight: 500;
+}
+
+.card-main { border-left-color: var(--color-brand-blue); }
+.card-analysis { border-left-color: #ffeaa7; }
+.card-admin { border-left-color: var(--color-text-subtle); }
+
+.footer {
+  text-align: center; margin-top: 40px; padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  font-size: 12px; color: var(--color-text-subtle);
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div class="container">
+  <div class="hero">
+    <div class="hero-logo">CT</div>
+    <h1>Co-LABO Talent</h1>
+    <p>タレントマネジメントシステム プロトタイプ</p>
+    <div class="meta">全10画面 | カオナビ ベンチマーク | 2026年2月26日作成</div>
+  </div>
+
+  <div class="grid">
+    <a href="prototype-dashboard.html" class="card card-main">
+      <div class="card-num">Screen 01</div>
+      <h3>ダッシュボード</h3>
+      <p>メンバー数サマリー、組織別分布、最近の更新を一覧表示。全体の状況を俯瞰できるホーム画面。</p>
+      <span class="card-tag" style="background:#e6f7fd;color:#0088bb;">メイン</span>
+    </a>
+
+    <a href="prototype-member-list.html" class="card card-main">
+      <div class="card-num">Screen 02</div>
+      <h3>メンバー一覧</h3>
+      <p>カオナビ風の顔写真グリッド表示。リスト表示切替、検索、フィルター機能付き。24名のダミーデータ。</p>
+      <span class="card-tag" style="background:#e6f7fd;color:#0088bb;">メイン</span>
+    </a>
+
+    <a href="prototype-member-profile.html" class="card card-main">
+      <div class="card-num">Screen 03</div>
+      <h3>メンバー詳細</h3>
+      <p>プロフィール表示。基本情報・所属・上長（第1/第2）・ストレングスファインダー・経歴をタブ切替で閲覧。</p>
+      <span class="card-tag" style="background:#e6f7fd;color:#0088bb;">メイン</span>
+    </a>
+
+    <a href="prototype-member-edit.html" class="card card-main">
+      <div class="card-num">Screen 04</div>
+      <h3>メンバー登録・編集</h3>
+      <p>基本情報、所属組織、稼働時間、上長（第1/第2）、ストレングスファインダーTOP5を入力するフォーム。</p>
+      <span class="card-tag" style="background:#e6f7fd;color:#0088bb;">メイン</span>
+    </a>
+
+    <a href="prototype-org-chart.html" class="card card-main">
+      <div class="card-num">Screen 05</div>
+      <h3>組織図</h3>
+      <p>ツリー構造の組織図。CEO→部門長→メンバーの階層をビジュアル表示。ズーム操作対応。</p>
+      <span class="card-tag" style="background:#e6f7fd;color:#0088bb;">メイン</span>
+    </a>
+
+    <a href="prototype-talent-map.html" class="card card-analysis">
+      <div class="card-num">Screen 06</div>
+      <h3>タレントマップ</h3>
+      <p>ストレングスファインダーのドメインスコアを2軸マトリクスにマッピング。部署別色分け、軸切替対応。</p>
+      <span class="card-tag" style="background:#ffeaa7;color:#8b6914;">分析</span>
+    </a>
+
+    <a href="prototype-strengths.html" class="card card-analysis">
+      <div class="card-num">Screen 07</div>
+      <h3>ストレングスファインダー</h3>
+      <p>4ドメイン概要、資質出現頻度ランキング、メンバー別TOP5一覧。組織全体の強み分布を可視化。</p>
+      <span class="card-tag" style="background:#ffeaa7;color:#8b6914;">分析</span>
+    </a>
+
+    <a href="prototype-working-hours.html" class="card card-analysis">
+      <div class="card-num">Screen 08</div>
+      <h3>稼働時間管理</h3>
+      <p>月別の稼働時間一覧。契約時間と実績の比較、進捗バー、超過/不足のステータス表示。</p>
+      <span class="card-tag" style="background:#ffeaa7;color:#8b6914;">分析</span>
+    </a>
+
+    <a href="prototype-team-view.html" class="card card-admin">
+      <div class="card-num">Screen 09</div>
+      <h3>チーム</h3>
+      <p>部署別カード表示。部門長、メンバー一覧、稼働時間合計、SFドメイン分布をチーム単位で確認。</p>
+      <span class="card-tag" style="background:#eceaea;color:#666;">管理</span>
+    </a>
+
+    <a href="prototype-settings.html" class="card card-admin">
+      <div class="card-num">Screen 10</div>
+      <h3>設定</h3>
+      <p>組織マスタ、役職マスタ、雇用形態、稼働時間プリセット、表示設定、CSV入出力。</p>
+      <span class="card-tag" style="background:#eceaea;color:#666;">管理</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    Co-LABO MAKER タレントマネジメントシステム モックアップ<br>
+    デザインベンチマーク: カオナビ | 技術: スタンドアロンHTML + CSS + JS
+  </div>
+</div>
+</body>
+</html>

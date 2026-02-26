@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メンバー詳細 - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+/* Breadcrumb */
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-subtle); margin-bottom: 20px; }
+.breadcrumb a { color: var(--color-brand-blue); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+/* Profile Header */
+.profile-header {
+  background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 24px; margin-bottom: 20px;
+  display: flex; gap: 24px; align-items: flex-start;
+}
+.profile-avatar {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: #6c3483; display: flex; align-items: center; justify-content: center;
+  font-size: 36px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.profile-info { flex: 1; }
+.profile-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.profile-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--color-text-muted); margin-bottom: 12px; }
+.profile-meta span { display: flex; align-items: center; gap: 4px; }
+.profile-meta svg { width: 14px; height: 14px; }
+.profile-actions { display: flex; gap: 8px; }
+.btn-edit {
+  height: 32px; padding: 0 16px; background: var(--color-brand-blue); color: white;
+  border: none; border-radius: 6px; font-family: inherit; font-size: 13px; font-weight: 500;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+}
+.btn-edit:hover { background: var(--color-brand-blue-hover); }
+.btn-secondary {
+  height: 32px; padding: 0 16px; background: #fff; color: var(--color-text-muted);
+  border: 1px solid var(--color-border); border-radius: 6px; font-family: inherit; font-size: 13px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+}
+.btn-secondary:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-employee { background: #e6f7fd; color: #0088bb; }
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 2px solid var(--color-bg-muted); margin-bottom: 20px; }
+.tab-btn {
+  padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--color-text-muted);
+  background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; font-family: inherit;
+}
+.tab-btn:hover { color: var(--color-text); }
+.tab-btn.active { color: var(--color-brand-blue); border-bottom-color: var(--color-brand-blue); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Info Grid */
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.card-header { padding: 14px 20px; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; }
+.card-header h3 { font-size: 14px; font-weight: 700; }
+.card-body { padding: 20px; }
+
+.info-row {
+  display: flex; padding: 10px 0; border-bottom: 1px solid var(--color-bg-subtle);
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { width: 120px; font-size: 12px; color: var(--color-text-subtle); flex-shrink: 0; padding-top: 1px; }
+.info-value { font-size: 13px; flex: 1; }
+
+/* Manager card */
+.manager-card {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  background: var(--color-bg-subtle); border-radius: 8px; margin-bottom: 8px;
+}
+.manager-card:last-child { margin-bottom: 0; }
+.manager-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: white; font-size: 14px; flex-shrink: 0;
+}
+.manager-info { flex: 1; }
+.manager-name { font-size: 13px; font-weight: 500; }
+.manager-role { font-size: 11px; color: var(--color-text-subtle); }
+
+/* Strengths */
+.strength-tag {
+  display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 500; margin: 3px;
+}
+.strength-1 { background: #ffeaa7; color: #8b6914; }
+.strength-2 { background: #81ecec; color: #006266; }
+.strength-3 { background: #fab1a0; color: #8b3520; }
+.strength-4 { background: #a29bfe; color: #3c2f8b; }
+.strength-domain { font-size: 11px; color: var(--color-text-subtle); margin-top: 8px; }
+
+/* Strengths radar-like display */
+.strengths-visual {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;
+}
+.domain-card {
+  padding: 12px; border-radius: 8px; text-align: center;
+}
+.domain-card .domain-name { font-size: 11px; font-weight: 500; margin-bottom: 4px; }
+.domain-card .domain-count { font-size: 20px; font-weight: 700; }
+.domain-card .domain-label { font-size: 10px; color: var(--color-text-subtle); }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+  .profile-header { flex-direction: column; align-items: center; text-align: center; }
+  .profile-meta { justify-content: center; }
+  .profile-actions { justify-content: center; }
+  .info-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">メンバー詳細</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <a href="prototype-member-edit.html" class="btn-edit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          編集
+        </a>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="breadcrumb">
+        <a href="prototype-member-list.html">メンバー一覧</a>
+        <span>/</span>
+        <span>佐藤 花子</span>
+      </div>
+
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-avatar">佐</div>
+        <div class="profile-info">
+          <div class="profile-name">佐藤 花子 <span class="badge badge-employee" style="margin-left:8px;vertical-align:middle;">正社員</span></div>
+          <div class="profile-meta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>プロダクト開発部</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>CTO / 技術統括</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>160h/月</span>
+          </div>
+          <div class="profile-actions">
+            <button class="btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              メール
+            </button>
+            <button class="btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Slack
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="basic">基本情報</button>
+        <button class="tab-btn" data-tab="strengths">ストレングスファインダー</button>
+        <button class="tab-btn" data-tab="career">キャリア</button>
+      </div>
+
+      <!-- Basic Info Tab -->
+      <div class="tab-content active" id="tab-basic">
+        <div class="info-grid">
+          <div class="card">
+            <div class="card-header"><h3>基本情報</h3></div>
+            <div class="card-body">
+              <div class="info-row"><div class="info-label">氏名</div><div class="info-value">佐藤 花子</div></div>
+              <div class="info-row"><div class="info-label">フリガナ</div><div class="info-value">サトウ ハナコ</div></div>
+              <div class="info-row"><div class="info-label">メール</div><div class="info-value">h.sato@co-labo-maker.com</div></div>
+              <div class="info-row"><div class="info-label">雇用形態</div><div class="info-value"><span class="badge badge-employee">正社員</span></div></div>
+              <div class="info-row"><div class="info-label">入社日</div><div class="info-value">2023年4月1日</div></div>
+              <div class="info-row"><div class="info-label">社員番号</div><div class="info-value">CLM-002</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>所属・担当</h3></div>
+            <div class="card-body">
+              <div class="info-row"><div class="info-label">所属組織</div><div class="info-value">プロダクト開発部</div></div>
+              <div class="info-row"><div class="info-label">役職</div><div class="info-value">CTO</div></div>
+              <div class="info-row"><div class="info-label">担当業務</div><div class="info-value">技術戦略策定、エンジニアリング組織マネジメント、アーキテクチャ設計</div></div>
+              <div class="info-row"><div class="info-label">稼働時間</div><div class="info-value">160h / 月（フルタイム）</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>上長</h3></div>
+            <div class="card-body" style="padding:16px;">
+              <div style="font-size:12px;color:var(--color-text-subtle);margin-bottom:8px;">第1上長</div>
+              <div class="manager-card">
+                <div class="manager-avatar" style="background:#1a5276;">山</div>
+                <div class="manager-info">
+                  <div class="manager-name">山田 太郎</div>
+                  <div class="manager-role">代表取締役 / 経営企画</div>
+                </div>
+              </div>
+              <div style="font-size:12px;color:var(--color-text-subtle);margin:12px 0 8px;">第2上長</div>
+              <div class="manager-card">
+                <div class="manager-avatar" style="background:#1e8449;">鈴</div>
+                <div class="manager-info">
+                  <div class="manager-name">鈴木 一郎</div>
+                  <div class="manager-role">事業開発部長 / 事業開発部</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>直属メンバー</h3></div>
+            <div class="card-body" style="padding:16px;">
+              <div class="manager-card">
+                <div class="manager-avatar" style="background:#c0392b;">田</div>
+                <div class="manager-info"><div class="manager-name">田中 美咲</div><div class="manager-role">PM / プロダクト開発部</div></div>
+              </div>
+              <div class="manager-card">
+                <div class="manager-avatar" style="background:#2874a6;">高</div>
+                <div class="manager-info"><div class="manager-name">高橋 健太</div><div class="manager-role">エンジニア / プロダクト開発部</div></div>
+              </div>
+              <div class="manager-card">
+                <div class="manager-avatar" style="background:#d68910;">渡</div>
+                <div class="manager-info"><div class="manager-name">渡辺 愛</div><div class="manager-role">デザイナー / プロダクト開発部</div></div>
+              </div>
+              <div class="manager-card">
+                <div class="manager-avatar" style="background:#1a5276;">木</div>
+                <div class="manager-info"><div class="manager-name">木村 翔</div><div class="manager-role">エンジニア / プロダクト開発部</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strengths Tab -->
+      <div class="tab-content" id="tab-strengths">
+        <div class="info-grid">
+          <div class="card">
+            <div class="card-header"><h3>TOP5 資質</h3></div>
+            <div class="card-body">
+              <div style="margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:#ffeaa7;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#8b6914;">1</span>
+                  <span style="font-size:14px;font-weight:700;">戦略性</span>
+                  <span class="strength-tag strength-1">Strategic Thinking</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:#81ecec;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#006266;">2</span>
+                  <span style="font-size:14px;font-weight:700;">未来志向</span>
+                  <span class="strength-tag strength-1">Strategic Thinking</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:#fab1a0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#8b3520;">3</span>
+                  <span style="font-size:14px;font-weight:700;">最上志向</span>
+                  <span class="strength-tag strength-3">Influencing</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:#a29bfe;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3c2f8b;">4</span>
+                  <span style="font-size:14px;font-weight:700;">達成欲</span>
+                  <span class="strength-tag strength-2">Executing</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:#dfe6e9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#636e72;">5</span>
+                  <span style="font-size:14px;font-weight:700;">学習欲</span>
+                  <span class="strength-tag strength-1">Strategic Thinking</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>ドメイン分布</h3></div>
+            <div class="card-body">
+              <div class="strengths-visual">
+                <div class="domain-card" style="background:#ffeaa7;">
+                  <div class="domain-name" style="color:#8b6914;">戦略的思考力</div>
+                  <div class="domain-count" style="color:#8b6914;">3</div>
+                  <div class="domain-label">Strategic Thinking</div>
+                </div>
+                <div class="domain-card" style="background:#81ecec;">
+                  <div class="domain-name" style="color:#006266;">実行力</div>
+                  <div class="domain-count" style="color:#006266;">1</div>
+                  <div class="domain-label">Executing</div>
+                </div>
+                <div class="domain-card" style="background:#fab1a0;">
+                  <div class="domain-name" style="color:#8b3520;">影響力</div>
+                  <div class="domain-count" style="color:#8b3520;">1</div>
+                  <div class="domain-label">Influencing</div>
+                </div>
+                <div class="domain-card" style="background:#a29bfe;">
+                  <div class="domain-name" style="color:#3c2f8b;">人間関係構築力</div>
+                  <div class="domain-count" style="color:#3c2f8b;">0</div>
+                  <div class="domain-label">Relationship Building</div>
+                </div>
+              </div>
+              <p style="font-size:12px;color:var(--color-text-subtle);margin-top:16px;line-height:1.6;">
+                戦略的思考力が突出しており、ビジョンを描き技術的な判断を行うCTOとしての資質が強く表れています。
+              </p>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column:1/-1;">
+            <div class="card-header"><h3>全34資質（登録済み）</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                <span class="strength-tag strength-1">1. 戦略性</span>
+                <span class="strength-tag strength-1">2. 未来志向</span>
+                <span class="strength-tag strength-3">3. 最上志向</span>
+                <span class="strength-tag strength-2">4. 達成欲</span>
+                <span class="strength-tag strength-1">5. 学習欲</span>
+                <span class="strength-tag" style="background:#eee;color:#666;">6. 分析思考</span>
+                <span class="strength-tag" style="background:#eee;color:#666;">7. 着想</span>
+                <span class="strength-tag" style="background:#eee;color:#666;">8. 自我</span>
+                <span class="strength-tag" style="background:#eee;color:#666;">9. 目標志向</span>
+                <span class="strength-tag" style="background:#eee;color:#666;">10. 指令性</span>
+                <span style="font-size:12px;color:var(--color-text-subtle);padding:4px 8px;">... 他24資質</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Career Tab -->
+      <div class="tab-content" id="tab-career">
+        <div class="card">
+          <div class="card-header"><h3>経歴</h3></div>
+          <div class="card-body">
+            <div style="position:relative;padding-left:24px;">
+              <div style="position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--color-border);"></div>
+              <div style="position:relative;margin-bottom:24px;">
+                <div style="position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--color-brand-blue);border:2px solid white;"></div>
+                <div style="font-size:12px;color:var(--color-text-subtle);">2023年4月 〜 現在</div>
+                <div style="font-size:14px;font-weight:700;margin:2px 0;">Co-LABO MAKER株式会社</div>
+                <div style="font-size:13px;color:var(--color-text-muted);">CTO / プロダクト開発部長</div>
+              </div>
+              <div style="position:relative;margin-bottom:24px;">
+                <div style="position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--color-border);border:2px solid white;"></div>
+                <div style="font-size:12px;color:var(--color-text-subtle);">2019年6月 〜 2023年3月</div>
+                <div style="font-size:14px;font-weight:700;margin:2px 0;">テクノスタート株式会社</div>
+                <div style="font-size:13px;color:var(--color-text-muted);">リードエンジニア</div>
+              </div>
+              <div style="position:relative;">
+                <div style="position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--color-border);border:2px solid white;"></div>
+                <div style="font-size:12px;color:var(--color-text-subtle);">2015年4月 〜 2019年5月</div>
+                <div style="font-size:14px;font-weight:700;margin:2px 0;">株式会社デジタルラボ</div>
+                <div style="font-size:13px;color:var(--color-text-muted);">ソフトウェアエンジニア</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Sidebar
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

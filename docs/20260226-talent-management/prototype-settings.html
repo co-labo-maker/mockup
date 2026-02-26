@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>設定 - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; max-width: 800px; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+/* Settings */
+.settings-nav { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--color-bg-muted); }
+.settings-nav button {
+  padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--color-text-muted);
+  background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; font-family: inherit;
+}
+.settings-nav button:hover { color: var(--color-text); }
+.settings-nav button.active { color: var(--color-brand-blue); border-bottom-color: var(--color-brand-blue); }
+
+.settings-section { display: none; }
+.settings-section.active { display: block; }
+
+.card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 16px; }
+.card-header { padding: 16px 20px; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; }
+.card-header h3 { font-size: 14px; font-weight: 700; }
+.card-body { padding: 20px; }
+
+/* Org list */
+.org-list-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--color-bg-subtle);
+}
+.org-list-item:last-child { border-bottom: none; }
+.org-name-col { display: flex; align-items: center; gap: 10px; }
+.org-color {
+  width: 12px; height: 12px; border-radius: 3px;
+}
+.org-label { font-size: 13px; font-weight: 500; }
+.org-count-badge {
+  background: var(--color-bg-subtle); padding: 2px 10px; border-radius: 12px;
+  font-size: 12px; color: var(--color-text-muted);
+}
+.org-actions { display: flex; gap: 6px; }
+.btn-icon {
+  width: 28px; height: 28px; border: 1px solid var(--color-border); border-radius: 4px;
+  background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--color-text-subtle);
+}
+.btn-icon:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+.btn-icon svg { width: 14px; height: 14px; }
+
+.btn-add-sm {
+  height: 32px; padding: 0 14px; background: #fff; border: 1px dashed var(--color-border);
+  border-radius: 6px; font-family: inherit; font-size: 12px; color: var(--color-text-muted);
+  cursor: pointer; display: flex; align-items: center; gap: 6px; margin-top: 12px;
+}
+.btn-add-sm:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+.btn-add-sm svg { width: 14px; height: 14px; }
+
+/* Toggle */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--color-bg-subtle);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 13px; }
+.toggle-desc { font-size: 11px; color: var(--color-text-subtle); }
+.toggle {
+  width: 44px; height: 24px; border-radius: 12px; background: var(--color-bg-muted);
+  position: relative; cursor: pointer; transition: background 0.2s;
+  border: none; flex-shrink: 0;
+}
+.toggle.on { background: var(--color-brand-blue); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 20px; height: 20px; border-radius: 50%; background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(20px); }
+
+/* Role tag */
+.role-item {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border: 1px solid var(--color-border); border-radius: 20px;
+  font-size: 12px; margin: 3px;
+}
+.role-remove {
+  width: 14px; height: 14px; border: none; background: none; cursor: pointer;
+  color: var(--color-text-subtle); display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.role-remove:hover { color: var(--color-error); }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">設定</h1>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="settings-nav">
+        <button class="active" data-section="org">組織マスタ</button>
+        <button data-section="roles">役職マスタ</button>
+        <button data-section="general">一般設定</button>
+      </div>
+
+      <!-- Organization Master -->
+      <div class="settings-section active" id="section-org">
+        <div class="card">
+          <div class="card-header">
+            <h3>組織・部署一覧</h3>
+          </div>
+          <div class="card-body">
+            <div class="org-list-item">
+              <div class="org-name-col">
+                <div class="org-color" style="background:#1a5276;"></div>
+                <div class="org-label">経営企画</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="org-count-badge">2名</span>
+                <div class="org-actions">
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="org-list-item">
+              <div class="org-name-col">
+                <div class="org-color" style="background:#6c3483;"></div>
+                <div class="org-label">プロダクト開発部</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="org-count-badge">9名</span>
+                <div class="org-actions">
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="org-list-item">
+              <div class="org-name-col">
+                <div class="org-color" style="background:#1e8449;"></div>
+                <div class="org-label">事業開発部</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="org-count-badge">6名</span>
+                <div class="org-actions">
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="org-list-item">
+              <div class="org-name-col">
+                <div class="org-color" style="background:#117864;"></div>
+                <div class="org-label">マーケティング部</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="org-count-badge">4名</span>
+                <div class="org-actions">
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="org-list-item">
+              <div class="org-name-col">
+                <div class="org-color" style="background:#7d3c98;"></div>
+                <div class="org-label">CS部</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="org-count-badge">3名</span>
+                <div class="org-actions">
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <button class="btn-add-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              組織を追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roles Master -->
+      <div class="settings-section" id="section-roles">
+        <div class="card">
+          <div class="card-header"><h3>役職一覧</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px;">
+              <div class="role-item">代表取締役<button class="role-remove">×</button></div>
+              <div class="role-item">CTO<button class="role-remove">×</button></div>
+              <div class="role-item">部長<button class="role-remove">×</button></div>
+              <div class="role-item">マネージャー<button class="role-remove">×</button></div>
+              <div class="role-item">チームリーダー<button class="role-remove">×</button></div>
+              <div class="role-item">メンバー<button class="role-remove">×</button></div>
+            </div>
+            <button class="btn-add-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              役職を追加
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>雇用形態</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px;">
+              <div class="role-item" style="border-color:#00adee;background:#e6f7fd;">正社員<button class="role-remove">×</button></div>
+              <div class="role-item" style="border-color:#ec1b23;background:#fff3f3;">業務委託<button class="role-remove">×</button></div>
+              <div class="role-item" style="border-color:#00d600;background:#d9f8ec;">インターン<button class="role-remove">×</button></div>
+            </div>
+            <button class="btn-add-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              雇用形態を追加
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>稼働時間プリセット</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px;">
+              <div class="role-item">160h（フルタイム）<button class="role-remove">×</button></div>
+              <div class="role-item">120h<button class="role-remove">×</button></div>
+              <div class="role-item">80h<button class="role-remove">×</button></div>
+              <div class="role-item">60h<button class="role-remove">×</button></div>
+              <div class="role-item">40h<button class="role-remove">×</button></div>
+            </div>
+            <button class="btn-add-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              プリセットを追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- General -->
+      <div class="settings-section" id="section-general">
+        <div class="card">
+          <div class="card-header"><h3>表示設定</h3></div>
+          <div class="card-body">
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">メンバー一覧のデフォルト表示</div>
+                <div class="toggle-desc">グリッド表示（OFF: リスト表示）</div>
+              </div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">ストレングスファインダーを表示</div>
+                <div class="toggle-desc">メンバー一覧やプロフィールにSF情報を表示</div>
+              </div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">稼働時間超過アラート</div>
+                <div class="toggle-desc">契約時間の105%超過時にダッシュボードに表示</div>
+              </div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>データ管理</h3></div>
+          <div class="card-body">
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">CSVエクスポート</div>
+                <div class="toggle-desc">メンバー情報のCSVダウンロード</div>
+              </div>
+              <button style="height:32px;padding:0 14px;background:#fff;border:1px solid var(--color-border);border-radius:6px;font-family:inherit;font-size:12px;color:var(--color-text-muted);cursor:pointer;" onclick="alert('CSVダウンロード（デモ）')">エクスポート</button>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">CSVインポート</div>
+                <div class="toggle-desc">メンバー情報の一括登録</div>
+              </div>
+              <button style="height:32px;padding:0 14px;background:#fff;border:1px solid var(--color-border);border-radius:6px;font-family:inherit;font-size:12px;color:var(--color-text-muted);cursor:pointer;" onclick="alert('CSVインポート（デモ）')">インポート</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+document.querySelectorAll('.settings-nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.settings-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('section-' + btn.dataset.section).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

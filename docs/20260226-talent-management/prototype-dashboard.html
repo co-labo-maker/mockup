@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ダッシュボード - Co-LABO Talent</title>
+<style>
+/* === Base CSS === */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23;
+  --color-primary-hover: #d41820;
+  --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee;
+  --color-brand-blue-hover: #009cd6;
+  --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f7f7;
+  --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8;
+  --color-border-strong: #c9c8c8;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-text-subtle: #828282;
+  --color-disabled: #adadad;
+  --color-success: #00d600;
+  --color-success-bg: #d9f8ec;
+  --color-warning: #fed802;
+  --color-warning-bg: #fffbdf;
+  --color-error: #ec1b23;
+  --color-error-bg: #fff3f3;
+  --color-info: #00adee;
+  --color-info-bg: #e6f7fd;
+  --sidebar-width: 220px;
+  --sidebar-bg: #1e2a3a;
+  --sidebar-text: #c8d6e5;
+  --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg-subtle);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Layout === */
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s;
+}
+.sidebar-logo {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sidebar-logo .logo-icon {
+  width: 32px; height: 32px;
+  background: var(--color-brand-blue);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px;
+}
+.sidebar-logo .logo-text {
+  font-size: 13px; font-weight: 700; color: #fff;
+  line-height: 1.3;
+}
+.sidebar-logo .logo-text small {
+  font-size: 10px; font-weight: 400; color: var(--sidebar-text);
+  display: block;
+}
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active {
+  background: rgba(0,173,238,0.1);
+  color: var(--sidebar-active);
+  border-left-color: var(--sidebar-active);
+  font-weight: 500;
+}
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section {
+  padding: 20px 20px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(200,214,229,0.5);
+}
+
+.main {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+.header {
+  height: var(--header-height);
+  background: #fff;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky; top: 0; z-index: 50;
+}
+.header-title { font-size: 16px; font-weight: 700; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.header-user {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--color-text-muted);
+}
+.header-user .avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--color-brand-blue);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.content { padding: 24px; }
+.mobile-menu-btn {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  color: var(--color-text); padding: 4px;
+}
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 99;
+}
+
+/* === Dashboard === */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.stat-card .stat-sub {
+  font-size: 12px;
+  color: var(--color-text-subtle);
+  margin-top: 4px;
+}
+.stat-card .stat-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.stat-card .stat-icon svg { width: 20px; height: 20px; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-header h3 { font-size: 14px; font-weight: 700; }
+.card-header a {
+  font-size: 12px;
+  color: var(--color-brand-blue);
+  text-decoration: none;
+}
+.card-body { padding: 20px; }
+
+/* Org Distribution */
+.org-bar {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+.org-bar:last-child { margin-bottom: 0; }
+.org-bar .org-name { width: 120px; font-size: 13px; flex-shrink: 0; }
+.org-bar .org-track { flex: 1; height: 24px; background: var(--color-bg-subtle); border-radius: 4px; overflow: hidden; }
+.org-bar .org-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: white; font-weight: 500; }
+.org-bar .org-count { width: 40px; text-align: right; font-size: 13px; font-weight: 500; }
+
+/* Recent Activity */
+.activity-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-bg-subtle);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.activity-content { flex: 1; }
+.activity-content .activity-text { font-size: 13px; line-height: 1.5; }
+.activity-content .activity-time { font-size: 11px; color: var(--color-text-subtle); margin-top: 2px; }
+
+/* Type badges */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 500;
+}
+.badge-employee { background: #e6f7fd; color: #0088bb; }
+.badge-contractor { background: #fff3f3; color: #cc1620; }
+.badge-intern { background: #d9f8ec; color: #009900; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .content { padding: 16px; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">CT</div>
+      <div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        ダッシュボード
+      </a>
+      <a href="prototype-member-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        メンバー一覧
+      </a>
+      <a href="prototype-org-chart.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>
+        組織図
+      </a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        タレントマップ
+      </a>
+      <a href="prototype-strengths.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        ストレングスファインダー
+      </a>
+      <a href="prototype-working-hours.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        稼働時間
+      </a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        チーム
+      </a>
+      <a href="prototype-settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        設定
+      </a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 class="header-title">ダッシュボード</h1>
+      </div>
+      <div class="header-actions">
+        <div class="header-user">
+          <span>田中 美咲</span>
+          <div class="avatar">田</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#e6f7fd;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00adee" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="stat-label">総メンバー数</div>
+          <div class="stat-value">24</div>
+          <div class="stat-sub">前月比 +2名</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#d9f8ec;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00aa00" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="stat-label">正社員</div>
+          <div class="stat-value">16</div>
+          <div class="stat-sub">66.7%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fff3f3;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ec1b23" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
+          </div>
+          <div class="stat-label">業務委託</div>
+          <div class="stat-value">5</div>
+          <div class="stat-sub">20.8%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fffbdf;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cc9900" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 10 3 12 0v-5"/></svg>
+          </div>
+          <div class="stat-label">インターン</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">12.5%</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Org Distribution -->
+        <div class="card">
+          <div class="card-header">
+            <h3>組織別メンバー分布</h3>
+            <a href="prototype-org-chart.html">組織図を見る →</a>
+          </div>
+          <div class="card-body">
+            <div class="org-bar">
+              <div class="org-name">プロダクト開発部</div>
+              <div class="org-track"><div class="org-fill" style="width:37.5%;background:var(--color-brand-blue);">9名</div></div>
+              <div class="org-count">9</div>
+            </div>
+            <div class="org-bar">
+              <div class="org-name">事業開発部</div>
+              <div class="org-track"><div class="org-fill" style="width:25%;background:#5cd0fb;">6名</div></div>
+              <div class="org-count">6</div>
+            </div>
+            <div class="org-bar">
+              <div class="org-name">マーケティング部</div>
+              <div class="org-track"><div class="org-fill" style="width:16.7%;background:#ff9124;">4名</div></div>
+              <div class="org-count">4</div>
+            </div>
+            <div class="org-bar">
+              <div class="org-name">CS部</div>
+              <div class="org-track"><div class="org-fill" style="width:12.5%;background:#00d600;">3名</div></div>
+              <div class="org-count">3</div>
+            </div>
+            <div class="org-bar">
+              <div class="org-name">経営企画</div>
+              <div class="org-track"><div class="org-fill" style="width:8.3%;background:#fed802;color:#333;">2名</div></div>
+              <div class="org-count">2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <h3>最近の更新</h3>
+          </div>
+          <div class="card-body">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-brand-blue);"></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>小林拓也</strong>さんがメンバー登録されました</div>
+                <div class="activity-time">2時間前</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-success);"></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>高橋健太</strong>さんのストレングスファインダーが更新されました</div>
+                <div class="activity-time">5時間前</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-warning);"></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>渡辺愛</strong>さんの所属が「デザインチーム」に変更されました</div>
+                <div class="activity-time">1日前</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-brand-blue);"></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>加藤由美</strong>さんの稼働時間が更新されました</div>
+                <div class="activity-time">1日前</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-error);"></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>佐藤花子</strong>さんが上長に設定されました</div>
+                <div class="activity-time">2日前</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Faces -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header">
+          <h3>新しいメンバー</h3>
+          <a href="prototype-member-list.html">全員を見る →</a>
+        </div>
+        <div class="card-body" style="display:flex;gap:16px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#e6f7fd;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0088bb;font-size:18px;margin:0 auto 6px;">小</div>
+            <div style="font-size:12px;font-weight:500;">小林 拓也</div>
+            <div style="font-size:11px;color:var(--color-text-subtle);">インターン</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#d9f8ec;display:flex;align-items:center;justify-content:center;font-weight:700;color:#009900;font-size:18px;margin:0 auto 6px;">松</div>
+            <div style="font-size:12px;font-weight:500;">松本 大地</div>
+            <div style="font-size:11px;color:var(--color-text-subtle);">正社員</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#fff3f3;display:flex;align-items:center;justify-content:center;font-weight:700;color:#cc1620;font-size:18px;margin:0 auto 6px;">加</div>
+            <div style="font-size:12px;font-weight:500;">加藤 由美</div>
+            <div style="font-size:11px;color:var(--color-text-subtle);">業務委託</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>稼働時間 - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --color-success: #00d600; --color-warning: #fed802; --color-error: #ec1b23;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+/* Month selector */
+.month-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.month-nav button {
+  width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--color-border);
+  background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--color-text-muted);
+}
+.month-nav button:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+.month-nav .current-month { font-size: 16px; font-weight: 700; }
+
+/* Summary cards */
+.hours-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.h-card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.h-card .h-label { font-size: 12px; color: var(--color-text-muted); margin-bottom: 4px; }
+.h-card .h-value { font-size: 24px; font-weight: 700; }
+.h-card .h-sub { font-size: 11px; color: var(--color-text-subtle); margin-top: 2px; }
+
+/* Table */
+.hours-table { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
+.hours-table table { width: 100%; border-collapse: collapse; }
+.hours-table th {
+  background: var(--color-bg-subtle); padding: 10px 16px; text-align: left;
+  font-size: 12px; font-weight: 500; color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border); white-space: nowrap;
+}
+.hours-table td { padding: 12px 16px; border-bottom: 1px solid var(--color-bg-subtle); font-size: 13px; }
+.hours-table tr:hover td { background: var(--color-brand-blue-light); }
+
+.name-cell { display: flex; align-items: center; gap: 10px; }
+.avatar-sm {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white; flex-shrink: 0;
+}
+
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-employee { background: #e6f7fd; color: #0088bb; }
+.badge-contractor { background: #fff3f3; color: #cc1620; }
+.badge-intern { background: #d9f8ec; color: #009900; }
+
+/* Progress bar */
+.progress-bar { display: flex; align-items: center; gap: 8px; }
+.progress-track { flex: 1; height: 8px; background: var(--color-bg-muted); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+.progress-text { width: 36px; font-size: 12px; font-weight: 500; text-align: right; }
+
+/* Status */
+.status-dot { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; }
+.status-dot::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+}
+.status-normal::before { background: var(--color-success); }
+.status-over::before { background: var(--color-error); }
+.status-under::before { background: var(--color-warning); }
+
+@media (max-width: 1024px) {
+  .hours-summary { grid-template-columns: 1fr 1fr; }
+  .hours-table { overflow-x: auto; }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+  .hours-summary { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">稼働時間</h1>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Month Nav -->
+      <div class="month-nav">
+        <button onclick="this.blur()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span class="current-month">2026年2月</span>
+        <button onclick="this.blur()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Summary -->
+      <div class="hours-summary">
+        <div class="h-card">
+          <div class="h-label">総稼働時間</div>
+          <div class="h-value" style="color:var(--color-brand-blue);">3,120h</div>
+          <div class="h-sub">計画: 3,200h</div>
+        </div>
+        <div class="h-card">
+          <div class="h-label">平均稼働率</div>
+          <div class="h-value">97.5%</div>
+          <div class="h-sub">前月比 +1.2%</div>
+        </div>
+        <div class="h-card">
+          <div class="h-label">フルタイム</div>
+          <div class="h-value">16名</div>
+          <div class="h-sub">160h/月</div>
+        </div>
+        <div class="h-card">
+          <div class="h-label">パートタイム</div>
+          <div class="h-value">8名</div>
+          <div class="h-sub">40〜120h/月</div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="hours-table">
+        <table>
+          <thead>
+            <tr>
+              <th>名前</th>
+              <th>所属</th>
+              <th>形態</th>
+              <th>契約時間</th>
+              <th>実績</th>
+              <th>進捗</th>
+              <th>状態</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#1a5276;">山</div>山田 太郎</div></td>
+              <td>経営企画</td>
+              <td><span class="badge badge-employee">正社員</span></td>
+              <td>160h</td>
+              <td>162h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--color-brand-blue);"></div></div><div class="progress-text">101%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#6c3483;">佐</div>佐藤 花子</div></td>
+              <td>プロダクト開発部</td>
+              <td><span class="badge badge-employee">正社員</span></td>
+              <td>160h</td>
+              <td>172h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--color-error);"></div></div><div class="progress-text">108%</div></div></td>
+              <td><span class="status-dot status-over">超過</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#1e8449;">鈴</div>鈴木 一郎</div></td>
+              <td>事業開発部</td>
+              <td><span class="badge badge-employee">正社員</span></td>
+              <td>160h</td>
+              <td>158h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:99%;background:var(--color-brand-blue);"></div></div><div class="progress-text">99%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#c0392b;">田</div>田中 美咲</div></td>
+              <td>プロダクト開発部</td>
+              <td><span class="badge badge-employee">正社員</span></td>
+              <td>160h</td>
+              <td>165h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--color-warning);"></div></div><div class="progress-text">103%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#2874a6;">高</div>高橋 健太</div></td>
+              <td>プロダクト開発部</td>
+              <td><span class="badge badge-employee">正社員</span></td>
+              <td>160h</td>
+              <td>160h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--color-brand-blue);"></div></div><div class="progress-text">100%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#d68910;">渡</div>渡辺 愛</div></td>
+              <td>プロダクト開発部</td>
+              <td><span class="badge badge-employee">正社員</span></td>
+              <td>160h</td>
+              <td>155h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:97%;background:var(--color-brand-blue);"></div></div><div class="progress-text">97%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#cb4335;">加</div>加藤 由美</div></td>
+              <td>マーケティング部</td>
+              <td><span class="badge badge-contractor">業務委託</span></td>
+              <td>120h</td>
+              <td>118h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:98%;background:var(--color-brand-blue);"></div></div><div class="progress-text">98%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#2e86c1;">小</div>小林 拓也</div></td>
+              <td>プロダクト開発部</td>
+              <td><span class="badge badge-intern">インターン</span></td>
+              <td>80h</td>
+              <td>64h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:80%;background:var(--color-warning);"></div></div><div class="progress-text">80%</div></div></td>
+              <td><span class="status-dot status-under">不足</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#117864;">林</div>林 悠子</div></td>
+              <td>マーケティング部</td>
+              <td><span class="badge badge-contractor">業務委託</span></td>
+              <td>80h</td>
+              <td>82h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--color-brand-blue);"></div></div><div class="progress-text">103%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+            <tr>
+              <td><div class="name-cell"><div class="avatar-sm" style="background:#c0392b;">石</div>石井 健</div></td>
+              <td>プロダクト開発部</td>
+              <td><span class="badge badge-contractor">業務委託</span></td>
+              <td>120h</td>
+              <td>124h</td>
+              <td><div class="progress-bar"><div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--color-brand-blue);"></div></div><div class="progress-text">103%</div></div></td>
+              <td><span class="status-dot status-normal">正常</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+</script>
+</body>
+</html>

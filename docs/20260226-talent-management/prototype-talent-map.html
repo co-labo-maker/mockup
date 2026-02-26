@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タレントマップ - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+/* Map Controls */
+.map-controls {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.map-controls select {
+  height: 36px; border: 1px solid var(--color-border); border-radius: 6px;
+  padding: 0 12px; font-family: inherit; font-size: 13px; background: #fff;
+}
+.axis-label-select { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+
+/* 2x2 Matrix / Scatter Map */
+.talent-map-container {
+  background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 24px; position: relative;
+}
+.map-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+
+.matrix-wrapper { position: relative; width: 100%; max-width: 700px; margin: 0 auto; }
+.matrix {
+  width: 100%; aspect-ratio: 1; position: relative;
+  border: 2px solid var(--color-border);
+  background: linear-gradient(var(--color-bg-subtle) 1px, transparent 1px),
+              linear-gradient(90deg, var(--color-bg-subtle) 1px, transparent 1px);
+  background-size: 50% 50%;
+}
+/* Quadrant labels */
+.q-label {
+  position: absolute; font-size: 11px; color: var(--color-text-subtle); font-weight: 500;
+  opacity: 0.6;
+}
+.q-label.tl { top: 8px; left: 8px; }
+.q-label.tr { top: 8px; right: 8px; }
+.q-label.bl { bottom: 8px; left: 8px; }
+.q-label.br { bottom: 8px; right: 8px; }
+
+/* Quadrant backgrounds */
+.matrix::before {
+  content: ''; position: absolute; top: 0; right: 0; width: 50%; height: 50%;
+  background: rgba(0,173,238,0.04);
+}
+
+/* Axis labels */
+.axis-x-label {
+  text-align: center; font-size: 12px; color: var(--color-text-muted); margin-top: 8px; font-weight: 500;
+}
+.axis-y-label {
+  position: absolute; left: -40px; top: 50%; transform: rotate(-90deg) translateX(-50%);
+  font-size: 12px; color: var(--color-text-muted); font-weight: 500;
+  transform-origin: left center; white-space: nowrap;
+}
+
+/* Dots */
+.map-dot {
+  position: absolute; width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.map-dot:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+.map-dot .tooltip {
+  display: none; position: absolute; bottom: calc(100% + 8px);
+  background: var(--sidebar-bg); color: #fff; padding: 6px 12px;
+  border-radius: 6px; font-size: 11px; white-space: nowrap;
+  font-weight: 400;
+}
+.map-dot .tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--sidebar-bg);
+}
+.map-dot:hover .tooltip { display: block; }
+
+/* Legend */
+.map-legend {
+  display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--color-bg-muted);
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-muted); }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+/* Summary cards */
+.summary-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px;
+}
+.summary-card {
+  background: #fff; border-radius: 8px; padding: 16px; text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.summary-card .s-label { font-size: 11px; color: var(--color-text-subtle); margin-bottom: 4px; }
+.summary-card .s-value { font-size: 24px; font-weight: 700; }
+.summary-card .s-desc { font-size: 11px; color: var(--color-text-subtle); margin-top: 2px; }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">タレントマップ</h1>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Controls -->
+      <div class="map-controls">
+        <div class="axis-label-select">
+          <span>X軸:</span>
+          <select id="xAxis">
+            <option value="strategic">戦略的思考力スコア</option>
+            <option value="executing">実行力スコア</option>
+            <option value="influencing">影響力スコア</option>
+            <option value="relationship">人間関係構築力スコア</option>
+          </select>
+        </div>
+        <div class="axis-label-select">
+          <span>Y軸:</span>
+          <select id="yAxis">
+            <option value="executing">実行力スコア</option>
+            <option value="strategic">戦略的思考力スコア</option>
+            <option value="influencing">影響力スコア</option>
+            <option value="relationship">人間関係構築力スコア</option>
+          </select>
+        </div>
+        <div class="axis-label-select">
+          <span>色分け:</span>
+          <select>
+            <option>部署</option>
+            <option>雇用形態</option>
+            <option>稼働時間</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="talent-map-container">
+        <div class="map-title">ストレングスファインダー ドメインマッピング</div>
+
+        <div class="matrix-wrapper" style="padding-left:50px;">
+          <div class="axis-y-label">← 実行力スコア（低）　　　実行力スコア（高）→</div>
+          <div class="matrix">
+            <div class="q-label tl">高い実行力<br>低い戦略性</div>
+            <div class="q-label tr" style="color:var(--color-brand-blue);font-weight:700;">高い実行力<br>高い戦略性</div>
+            <div class="q-label bl" style="opacity:0.4;">低い実行力<br>低い戦略性</div>
+            <div class="q-label br">低い実行力<br>高い戦略性</div>
+
+            <!-- Center lines -->
+            <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--color-border);opacity:0.6;"></div>
+            <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:var(--color-border);opacity:0.6;"></div>
+
+            <!-- People dots -->
+            <div class="map-dot" style="left:75%;top:15%;background:#6c3483;">
+              佐<div class="tooltip">佐藤 花子<br>プロダクト開発部<br>戦略性・達成欲</div>
+            </div>
+            <div class="map-dot" style="left:30%;top:25%;background:#1a5276;">
+              山<div class="tooltip">山田 太郎<br>経営企画<br>最上志向・指令性</div>
+            </div>
+            <div class="map-dot" style="left:60%;top:35%;background:#c0392b;">
+              田<div class="tooltip">田中 美咲<br>プロダクト開発部<br>共感性・個別化</div>
+            </div>
+            <div class="map-dot" style="left:82%;top:30%;background:#2874a6;">
+              高<div class="tooltip">高橋 健太<br>プロダクト開発部<br>分析思考・学習欲</div>
+            </div>
+            <div class="map-dot" style="left:45%;top:55%;background:#d68910;">
+              渡<div class="tooltip">渡辺 愛<br>プロダクト開発部<br>着想・適応性</div>
+            </div>
+            <div class="map-dot" style="left:25%;top:40%;background:#1e8449;">
+              鈴<div class="tooltip">鈴木 一郎<br>事業開発部<br>活発性・社交性</div>
+            </div>
+            <div class="map-dot" style="left:68%;top:60%;background:#117864;">
+              伊<div class="tooltip">伊藤 大輔<br>マーケティング部<br>コミュニケーション・ポジティブ</div>
+            </div>
+            <div class="map-dot" style="left:35%;top:70%;background:#7d3c98;">
+              中<div class="tooltip">中村 さくら<br>CS部<br>調和性・親密性</div>
+            </div>
+            <div class="map-dot" style="left:55%;top:45%;background:#1a5276;">
+              松<div class="tooltip">松本 大地<br>事業開発部<br>責任感・目標志向</div>
+            </div>
+            <div class="map-dot" style="left:40%;top:20%;background:#cb4335;">
+              加<div class="tooltip">加藤 由美<br>マーケティング部<br>収集心・内省</div>
+            </div>
+            <div class="map-dot" style="left:20%;top:65%;background:#2e86c1;">
+              小<div class="tooltip">小林 拓也<br>プロダクト開発部<br>学習欲・着想</div>
+            </div>
+            <div class="map-dot" style="left:88%;top:42%;background:#d68910;">
+              木<div class="tooltip">木村 翔<br>プロダクト開発部<br>達成欲・規律性</div>
+            </div>
+          </div>
+          <div class="axis-x-label">← 戦略的思考力スコア（低）　　　戦略的思考力スコア（高）→</div>
+        </div>
+
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#6c3483;"></div>プロダクト開発部</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1e8449;"></div>事業開発部</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#117864;"></div>マーケティング部</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7d3c98;"></div>CS部</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1a5276;"></div>経営企画</div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="s-label">戦略的思考力</div>
+          <div class="s-value" style="color:#8b6914;">38%</div>
+          <div class="s-desc">TOP5に含む人数: 9名</div>
+        </div>
+        <div class="summary-card">
+          <div class="s-label">実行力</div>
+          <div class="s-value" style="color:#006266;">29%</div>
+          <div class="s-desc">TOP5に含む人数: 7名</div>
+        </div>
+        <div class="summary-card">
+          <div class="s-label">影響力</div>
+          <div class="s-value" style="color:#8b3520;">17%</div>
+          <div class="s-desc">TOP5に含む人数: 4名</div>
+        </div>
+        <div class="summary-card">
+          <div class="s-label">人間関係構築力</div>
+          <div class="s-value" style="color:#3c2f8b;">16%</div>
+          <div class="s-desc">TOP5に含む人数: 4名</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+</script>
+</body>
+</html>

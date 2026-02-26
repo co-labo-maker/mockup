@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チーム - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+/* Team Cards */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+.team-card {
+  background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.team-card-header {
+  padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--color-bg-muted);
+}
+.team-card-header .team-color {
+  width: 4px; height: 40px; border-radius: 2px; margin-right: 12px;
+}
+.team-info { flex: 1; }
+.team-info .team-name { font-size: 15px; font-weight: 700; }
+.team-info .team-meta { font-size: 12px; color: var(--color-text-subtle); }
+.team-count {
+  background: var(--color-bg-subtle); padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 500; color: var(--color-text-muted);
+}
+
+.team-card-body { padding: 16px 20px; }
+.team-lead {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--color-bg-subtle);
+}
+.team-lead-label { font-size: 10px; color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.lead-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: white; font-size: 14px; flex-shrink: 0;
+}
+.lead-info .lead-name { font-size: 13px; font-weight: 500; }
+.lead-info .lead-role { font-size: 11px; color: var(--color-text-subtle); }
+
+.team-members-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px;
+}
+.tm-item {
+  display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+  border-radius: 6px; cursor: pointer; transition: background 0.15s;
+}
+.tm-item:hover { background: var(--color-bg-subtle); }
+.tm-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.tm-name { font-size: 12px; }
+.tm-type { font-size: 10px; color: var(--color-text-subtle); }
+
+/* Team stats */
+.team-stats {
+  display: flex; gap: 16px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--color-bg-subtle);
+}
+.team-stat { text-align: center; flex: 1; }
+.team-stat .ts-value { font-size: 16px; font-weight: 700; }
+.team-stat .ts-label { font-size: 10px; color: var(--color-text-subtle); }
+
+/* Strength distribution mini */
+.strength-mini {
+  display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px;
+}
+.strength-mini div { height: 100%; }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+  .team-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">チーム</h1>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="team-grid">
+        <!-- Product Development -->
+        <div class="team-card">
+          <div class="team-card-header">
+            <div style="display:flex;align-items:center;">
+              <div class="team-color" style="background:#6c3483;"></div>
+              <div class="team-info">
+                <div class="team-name">プロダクト開発部</div>
+                <div class="team-meta">エンジニアリング・デザイン・PM</div>
+              </div>
+            </div>
+            <div class="team-count">9名</div>
+          </div>
+          <div class="team-card-body">
+            <div class="team-lead-label">部門長</div>
+            <div class="team-lead">
+              <div class="lead-avatar" style="background:#6c3483;">佐</div>
+              <div class="lead-info">
+                <div class="lead-name">佐藤 花子</div>
+                <div class="lead-role">CTO</div>
+              </div>
+            </div>
+            <div class="team-members-grid">
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#c0392b;">田</div>
+                <div><div class="tm-name">田中 美咲</div><div class="tm-type">PM</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#2874a6;">高</div>
+                <div><div class="tm-name">高橋 健太</div><div class="tm-type">エンジニア</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#d68910;">渡</div>
+                <div><div class="tm-name">渡辺 愛</div><div class="tm-type">デザイナー</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#1a5276;">木</div>
+                <div><div class="tm-name">木村 翔</div><div class="tm-type">エンジニア</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#2e86c1;">清</div>
+                <div><div class="tm-name">清水 陽介</div><div class="tm-type">エンジニア</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#c0392b;">石</div>
+                <div><div class="tm-name">石井 健</div><div class="tm-type">業務委託</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#2e86c1;">小</div>
+                <div><div class="tm-name">小林 拓也</div><div class="tm-type">インターン</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#d68910;">村</div>
+                <div><div class="tm-name">村上 麻衣</div><div class="tm-type">インターン</div></div>
+              </div>
+            </div>
+            <div class="team-stats">
+              <div class="team-stat">
+                <div class="ts-value">1,280h</div>
+                <div class="ts-label">月間稼働</div>
+              </div>
+              <div class="team-stat">
+                <div class="ts-value">6 / 2 / 1</div>
+                <div class="ts-label">正社員 / 委託 / インターン</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;">
+              <div style="font-size:10px;color:var(--color-text-subtle);margin-bottom:4px;">SF ドメイン分布</div>
+              <div class="strength-mini">
+                <div style="width:40%;background:#ffeaa7;"></div>
+                <div style="width:30%;background:#81ecec;"></div>
+                <div style="width:15%;background:#fab1a0;"></div>
+                <div style="width:15%;background:#a29bfe;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Development -->
+        <div class="team-card">
+          <div class="team-card-header">
+            <div style="display:flex;align-items:center;">
+              <div class="team-color" style="background:#1e8449;"></div>
+              <div class="team-info">
+                <div class="team-name">事業開発部</div>
+                <div class="team-meta">新規事業・営業・パートナーシップ</div>
+              </div>
+            </div>
+            <div class="team-count">6名</div>
+          </div>
+          <div class="team-card-body">
+            <div class="team-lead-label">部門長</div>
+            <div class="team-lead">
+              <div class="lead-avatar" style="background:#1e8449;">鈴</div>
+              <div class="lead-info">
+                <div class="lead-name">鈴木 一郎</div>
+                <div class="lead-role">事業開発部長</div>
+              </div>
+            </div>
+            <div class="team-members-grid">
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#1a5276;">松</div>
+                <div><div class="tm-name">松本 大地</div><div class="tm-type">営業</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#cb4335;">山</div>
+                <div><div class="tm-name">山口 美穂</div><div class="tm-type">事業企画</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#2e86c1;">藤</div>
+                <div><div class="tm-name">藤田 拓海</div><div class="tm-type">営業</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#6c3483;">近</div>
+                <div><div class="tm-name">近藤 雄太</div><div class="tm-type">営業</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#1a5276;">後</div>
+                <div><div class="tm-name">後藤 慎也</div><div class="tm-type">業務委託</div></div>
+              </div>
+            </div>
+            <div class="team-stats">
+              <div class="team-stat">
+                <div class="ts-value">920h</div>
+                <div class="ts-label">月間稼働</div>
+              </div>
+              <div class="team-stat">
+                <div class="ts-value">4 / 1 / 0</div>
+                <div class="ts-label">正社員 / 委託 / インターン</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;">
+              <div style="font-size:10px;color:var(--color-text-subtle);margin-bottom:4px;">SF ドメイン分布</div>
+              <div class="strength-mini">
+                <div style="width:25%;background:#ffeaa7;"></div>
+                <div style="width:25%;background:#81ecec;"></div>
+                <div style="width:35%;background:#fab1a0;"></div>
+                <div style="width:15%;background:#a29bfe;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marketing -->
+        <div class="team-card">
+          <div class="team-card-header">
+            <div style="display:flex;align-items:center;">
+              <div class="team-color" style="background:#117864;"></div>
+              <div class="team-info">
+                <div class="team-name">マーケティング部</div>
+                <div class="team-meta">マーケティング・コンテンツ・広報</div>
+              </div>
+            </div>
+            <div class="team-count">4名</div>
+          </div>
+          <div class="team-card-body">
+            <div class="team-lead-label">部門長</div>
+            <div class="team-lead">
+              <div class="lead-avatar" style="background:#117864;">伊</div>
+              <div class="lead-info">
+                <div class="lead-name">伊藤 大輔</div>
+                <div class="lead-role">マーケティング部長</div>
+              </div>
+            </div>
+            <div class="team-members-grid">
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#cb4335;">加</div>
+                <div><div class="tm-name">加藤 由美</div><div class="tm-type">業務委託</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#117864;">林</div>
+                <div><div class="tm-name">林 悠子</div><div class="tm-type">業務委託</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#cb4335;">岡</div>
+                <div><div class="tm-name">岡田 結衣</div><div class="tm-type">マーケター</div></div>
+              </div>
+            </div>
+            <div class="team-stats">
+              <div class="team-stat">
+                <div class="ts-value">520h</div>
+                <div class="ts-label">月間稼働</div>
+              </div>
+              <div class="team-stat">
+                <div class="ts-value">2 / 2 / 0</div>
+                <div class="ts-label">正社員 / 委託 / インターン</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;">
+              <div style="font-size:10px;color:var(--color-text-subtle);margin-bottom:4px;">SF ドメイン分布</div>
+              <div class="strength-mini">
+                <div style="width:30%;background:#ffeaa7;"></div>
+                <div style="width:20%;background:#81ecec;"></div>
+                <div style="width:30%;background:#fab1a0;"></div>
+                <div style="width:20%;background:#a29bfe;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CS -->
+        <div class="team-card">
+          <div class="team-card-header">
+            <div style="display:flex;align-items:center;">
+              <div class="team-color" style="background:#7d3c98;"></div>
+              <div class="team-info">
+                <div class="team-name">CS部</div>
+                <div class="team-meta">カスタマーサクセス・サポート</div>
+              </div>
+            </div>
+            <div class="team-count">3名</div>
+          </div>
+          <div class="team-card-body">
+            <div class="team-lead-label">部門長</div>
+            <div class="team-lead">
+              <div class="lead-avatar" style="background:#7d3c98;">中</div>
+              <div class="lead-info">
+                <div class="lead-name">中村 さくら</div>
+                <div class="lead-role">CS部長</div>
+              </div>
+            </div>
+            <div class="team-members-grid">
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#6c3483;">吉</div>
+                <div><div class="tm-name">吉田 真理</div><div class="tm-type">CS</div></div>
+              </div>
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#7d3c98;">前</div>
+                <div><div class="tm-name">前田 あかり</div><div class="tm-type">CS</div></div>
+              </div>
+            </div>
+            <div class="team-stats">
+              <div class="team-stat">
+                <div class="ts-value">480h</div>
+                <div class="ts-label">月間稼働</div>
+              </div>
+              <div class="team-stat">
+                <div class="ts-value">3 / 0 / 0</div>
+                <div class="ts-label">正社員 / 委託 / インターン</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;">
+              <div style="font-size:10px;color:var(--color-text-subtle);margin-bottom:4px;">SF ドメイン分布</div>
+              <div class="strength-mini">
+                <div style="width:15%;background:#ffeaa7;"></div>
+                <div style="width:25%;background:#81ecec;"></div>
+                <div style="width:10%;background:#fab1a0;"></div>
+                <div style="width:50%;background:#a29bfe;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Executive -->
+        <div class="team-card">
+          <div class="team-card-header">
+            <div style="display:flex;align-items:center;">
+              <div class="team-color" style="background:#1a5276;"></div>
+              <div class="team-info">
+                <div class="team-name">経営企画</div>
+                <div class="team-meta">経営戦略・総務・人事</div>
+              </div>
+            </div>
+            <div class="team-count">2名</div>
+          </div>
+          <div class="team-card-body">
+            <div class="team-lead-label">代表</div>
+            <div class="team-lead">
+              <div class="lead-avatar" style="background:#1a5276;">山</div>
+              <div class="lead-info">
+                <div class="lead-name">山田 太郎</div>
+                <div class="lead-role">代表取締役</div>
+              </div>
+            </div>
+            <div class="team-members-grid">
+              <div class="tm-item">
+                <div class="tm-avatar" style="background:#117864;">坂</div>
+                <div><div class="tm-name">坂本 七海</div><div class="tm-type">インターン</div></div>
+              </div>
+            </div>
+            <div class="team-stats">
+              <div class="team-stat">
+                <div class="ts-value">240h</div>
+                <div class="ts-label">月間稼働</div>
+              </div>
+              <div class="team-stat">
+                <div class="ts-value">1 / 0 / 1</div>
+                <div class="ts-label">正社員 / 委託 / インターン</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+</script>
+</body>
+</html>

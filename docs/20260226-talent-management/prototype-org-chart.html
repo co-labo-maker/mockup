@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>組織図 - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; overflow-x: auto; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+/* Org Chart */
+.org-chart { display: flex; flex-direction: column; align-items: center; min-width: 900px; }
+
+.org-node {
+  background: #fff; border: 2px solid var(--color-border); border-radius: 10px;
+  padding: 14px 20px; text-align: center; min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.org-node:hover { border-color: var(--color-brand-blue); box-shadow: 0 4px 12px rgba(0,173,238,0.15); }
+.org-node.ceo { border-color: var(--color-brand-blue); background: linear-gradient(135deg, #e6f7fd 0%, #fff 100%); }
+.org-node .node-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: white; font-size: 16px;
+  margin: 0 auto 8px;
+}
+.org-node .node-name { font-size: 13px; font-weight: 700; }
+.org-node .node-title { font-size: 11px; color: var(--color-text-subtle); }
+.org-node .node-dept { font-size: 10px; color: var(--color-brand-blue); margin-top: 2px; font-weight: 500; }
+.org-node .node-count {
+  position: absolute; top: -8px; right: -8px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--color-brand-blue); color: white;
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Tree lines */
+.org-level { display: flex; justify-content: center; gap: 24px; margin-top: 40px; position: relative; }
+.org-connector {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+}
+.org-connector::before {
+  content: ''; position: absolute; top: -20px; left: 50%; width: 2px; height: 20px;
+  background: var(--color-border);
+}
+.org-level-line {
+  position: relative; margin-top: 40px;
+}
+.org-level-line::before {
+  content: ''; position: absolute; top: -20px; left: 50%; width: 2px; height: 20px;
+  background: var(--color-border);
+}
+.org-children {
+  display: flex; gap: 20px; justify-content: center; margin-top: 40px;
+  position: relative;
+}
+.org-children::before {
+  content: ''; position: absolute; top: -20px; left: 50%; width: 2px; height: 20px;
+  background: var(--color-border);
+}
+.org-children > .org-connector::before { top: -20px; }
+
+/* Horizontal connector line */
+.org-h-line {
+  display: flex; gap: 20px; justify-content: center; margin-top: 40px;
+  position: relative;
+}
+.org-h-line::before {
+  content: ''; position: absolute; top: -20px;
+  left: calc(50% - 50%); right: calc(50% - 50%);
+  width: 2px; height: 20px; background: var(--color-border);
+  left: 50%; transform: translateX(-50%);
+}
+
+/* Members under department */
+.dept-members {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+  margin-top: 12px; max-width: 180px;
+}
+.mini-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: white;
+  cursor: pointer; transition: transform 0.15s;
+}
+.mini-avatar:hover { transform: scale(1.2); }
+
+.zoom-controls {
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 4px;
+  z-index: 50;
+}
+.zoom-btn {
+  width: 36px; height: 36px; background: #fff; border: 1px solid var(--color-border);
+  border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--color-text-muted);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.zoom-btn:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">組織図</h1>
+      </div>
+    </header>
+
+    <div class="content" id="chartContainer">
+      <div class="org-chart" id="orgChart" style="transform-origin: top center;">
+        <!-- CEO -->
+        <div class="org-node ceo">
+          <div class="node-avatar" style="background:#1a5276;">山</div>
+          <div class="node-name">山田 太郎</div>
+          <div class="node-title">代表取締役</div>
+          <div class="node-dept">経営企画</div>
+        </div>
+
+        <!-- Vertical line from CEO -->
+        <div style="width:2px;height:30px;background:var(--color-border);margin:0 auto;"></div>
+
+        <!-- Horizontal connector -->
+        <div style="position:relative;width:100%;max-width:920px;margin:0 auto;">
+          <div style="position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--color-border);"></div>
+
+          <!-- Department heads -->
+          <div style="display:flex;justify-content:space-between;padding-top:30px;">
+            <!-- Product Development -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div style="width:2px;height:30px;background:var(--color-border);position:absolute;top:0;"></div>
+              <div class="org-node">
+                <div class="node-count">9</div>
+                <div class="node-avatar" style="background:#6c3483;">佐</div>
+                <div class="node-name">佐藤 花子</div>
+                <div class="node-title">CTO</div>
+                <div class="node-dept">プロダクト開発部</div>
+              </div>
+              <div class="dept-members" style="margin-top:16px;">
+                <div class="mini-avatar" style="background:#c0392b;" title="田中 美咲">田</div>
+                <div class="mini-avatar" style="background:#2874a6;" title="高橋 健太">高</div>
+                <div class="mini-avatar" style="background:#d68910;" title="渡辺 愛">渡</div>
+                <div class="mini-avatar" style="background:#1a5276;" title="木村 翔">木</div>
+                <div class="mini-avatar" style="background:#2e86c1;" title="清水 陽介">清</div>
+                <div class="mini-avatar" style="background:#c0392b;" title="石井 健">石</div>
+                <div class="mini-avatar" style="background:#2e86c1;" title="小林 拓也">小</div>
+                <div class="mini-avatar" style="background:#d68910;" title="村上 麻衣">村</div>
+              </div>
+            </div>
+
+            <!-- Business Development -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="org-node">
+                <div class="node-count">6</div>
+                <div class="node-avatar" style="background:#1e8449;">鈴</div>
+                <div class="node-name">鈴木 一郎</div>
+                <div class="node-title">部長</div>
+                <div class="node-dept">事業開発部</div>
+              </div>
+              <div class="dept-members" style="margin-top:16px;">
+                <div class="mini-avatar" style="background:#1a5276;" title="松本 大地">松</div>
+                <div class="mini-avatar" style="background:#cb4335;" title="山口 美穂">山</div>
+                <div class="mini-avatar" style="background:#2e86c1;" title="藤田 拓海">藤</div>
+                <div class="mini-avatar" style="background:#6c3483;" title="近藤 雄太">近</div>
+                <div class="mini-avatar" style="background:#1a5276;" title="後藤 慎也">後</div>
+              </div>
+            </div>
+
+            <!-- Marketing -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="org-node">
+                <div class="node-count">4</div>
+                <div class="node-avatar" style="background:#117864;">伊</div>
+                <div class="node-name">伊藤 大輔</div>
+                <div class="node-title">部長</div>
+                <div class="node-dept">マーケティング部</div>
+              </div>
+              <div class="dept-members" style="margin-top:16px;">
+                <div class="mini-avatar" style="background:#cb4335;" title="加藤 由美">加</div>
+                <div class="mini-avatar" style="background:#117864;" title="林 悠子">林</div>
+                <div class="mini-avatar" style="background:#cb4335;" title="岡田 結衣">岡</div>
+              </div>
+            </div>
+
+            <!-- CS -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="org-node">
+                <div class="node-count">3</div>
+                <div class="node-avatar" style="background:#7d3c98;">中</div>
+                <div class="node-name">中村 さくら</div>
+                <div class="node-title">部長</div>
+                <div class="node-dept">CS部</div>
+              </div>
+              <div class="dept-members" style="margin-top:16px;">
+                <div class="mini-avatar" style="background:#6c3483;" title="吉田 真理">吉</div>
+                <div class="mini-avatar" style="background:#7d3c98;" title="前田 あかり">前</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zoom -->
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoom(0.1)">+</button>
+      <button class="zoom-btn" onclick="zoom(-0.1)">−</button>
+      <button class="zoom-btn" onclick="resetZoom()" style="font-size:12px;">↺</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+let scale = 1;
+const chart = document.getElementById('orgChart');
+function zoom(delta) {
+  scale = Math.max(0.5, Math.min(1.5, scale + delta));
+  chart.style.transform = `scale(${scale})`;
+}
+function resetZoom() {
+  scale = 1;
+  chart.style.transform = 'scale(1)';
+}
+</script>
+</body>
+</html>

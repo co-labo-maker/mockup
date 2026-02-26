@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メンバー登録・編集 - Co-LABO Talent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root {
+  --color-primary: #ec1b23; --color-primary-hover: #d41820; --color-primary-light: #fff3f3;
+  --color-brand-blue: #00adee; --color-brand-blue-hover: #009cd6; --color-brand-blue-light: #e6f7fd;
+  --color-bg: #ffffff; --color-bg-subtle: #f7f7f7; --color-bg-muted: #eceaea;
+  --color-border: #d8d8d8; --color-border-strong: #c9c8c8;
+  --color-text: #333333; --color-text-muted: #666666; --color-text-subtle: #828282; --color-disabled: #adadad;
+  --sidebar-width: 220px; --sidebar-bg: #1e2a3a; --sidebar-text: #c8d6e5; --sidebar-active: #00adee;
+  --header-height: 56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif; color: var(--color-text); background: var(--color-bg-subtle); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s; }
+.sidebar-logo { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo .logo-icon { width: 32px; height: 32px; background: var(--color-brand-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+.sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-logo .logo-text small { font-size: 10px; font-weight: 400; color: var(--sidebar-text); display: block; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar-nav a.active { background: rgba(0,173,238,0.1); color: var(--sidebar-active); border-left-color: var(--sidebar-active); font-weight: 500; }
+.sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section { padding: 20px 20px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(200,214,229,0.5); }
+.main { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+.header { height: var(--header-height); background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; }
+.header-title { font-size: 16px; font-weight: 700; }
+.content { padding: 24px; max-width: 800px; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-text); padding: 4px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-subtle); margin-bottom: 20px; }
+.breadcrumb a { color: var(--color-brand-blue); text-decoration: none; }
+
+/* Form */
+.form-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
+.form-card-header { padding: 16px 24px; border-bottom: 1px solid var(--color-border); }
+.form-card-header h3 { font-size: 14px; font-weight: 700; }
+.form-card-body { padding: 24px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-row.single { grid-template-columns: 1fr; }
+.form-group { margin-bottom: 0; }
+.form-group label {
+  display: block; font-size: 12px; font-weight: 500;
+  color: var(--color-text-muted); margin-bottom: 6px;
+}
+.form-group label .required {
+  color: var(--color-primary); margin-left: 4px; font-size: 11px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; height: 40px; border: 1px solid var(--color-border);
+  border-radius: 6px; padding: 0 12px; font-family: inherit; font-size: 13px;
+  color: var(--color-text); background: #fff;
+  transition: border-color 0.15s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--color-brand-blue);
+  box-shadow: 0 0 0 3px rgba(0,173,238,0.1);
+}
+.form-group textarea { height: 80px; padding: 10px 12px; resize: vertical; }
+.form-group input::placeholder { color: var(--color-disabled); }
+.form-hint { font-size: 11px; color: var(--color-text-subtle); margin-top: 4px; }
+
+/* Avatar upload */
+.avatar-upload {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+}
+.avatar-preview {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--color-bg-muted); display: flex; align-items: center; justify-content: center;
+  color: var(--color-text-subtle); flex-shrink: 0;
+}
+.avatar-preview svg { width: 32px; height: 32px; }
+.avatar-actions { }
+.btn-upload {
+  height: 32px; padding: 0 14px; background: #fff; border: 1px solid var(--color-border);
+  border-radius: 6px; font-family: inherit; font-size: 12px; color: var(--color-text-muted);
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-upload:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+
+/* Strengths input */
+.strengths-input { }
+.strength-item {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.strength-item .num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--color-brand-blue-light); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--color-brand-blue); flex-shrink: 0;
+}
+.strength-item select {
+  flex: 1; height: 36px; border: 1px solid var(--color-border); border-radius: 6px;
+  padding: 0 10px; font-family: inherit; font-size: 13px;
+}
+.strength-item select:focus { outline: none; border-color: var(--color-brand-blue); }
+
+/* Footer */
+.form-footer {
+  display: flex; justify-content: flex-end; gap: 12px; padding: 20px 0;
+}
+.btn-cancel {
+  height: 40px; padding: 0 24px; background: #fff; border: 1px solid var(--color-border);
+  border-radius: 6px; font-family: inherit; font-size: 14px; color: var(--color-text-muted);
+  cursor: pointer;
+}
+.btn-cancel:hover { border-color: var(--color-text-muted); }
+.btn-save {
+  height: 40px; padding: 0 24px; background: var(--color-brand-blue); color: white;
+  border: none; border-radius: 6px; font-family: inherit; font-size: 14px; font-weight: 500;
+  cursor: pointer;
+}
+.btn-save:hover { background: var(--color-brand-blue-hover); }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .content { padding: 16px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;"><span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span><a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a></div>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">CT</div><div class="logo-text">Co-LABO Talent<small>タレントマネジメント</small></div></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">メイン</div>
+      <a href="prototype-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</a>
+      <a href="prototype-member-list.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>メンバー一覧</a>
+      <a href="prototype-org-chart.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="6" rx="1"/><rect x="14" y="2" width="8" height="6" rx="1"/><rect x="8" y="16" width="8" height="6" rx="1"/><path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/><path d="M12 13v3"/></svg>組織図</a>
+      <div class="sidebar-section">分析</div>
+      <a href="prototype-talent-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>タレントマップ</a>
+      <a href="prototype-strengths.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>ストレングスファインダー</a>
+      <a href="prototype-working-hours.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>稼働時間</a>
+      <div class="sidebar-section">管理</div>
+      <a href="prototype-team-view.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>チーム</a>
+      <a href="prototype-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</a>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <h1 class="header-title">メンバー登録</h1>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="breadcrumb">
+        <a href="prototype-member-list.html">メンバー一覧</a>
+        <span>/</span>
+        <span>新規登録</span>
+      </div>
+
+      <!-- Avatar -->
+      <div class="form-card">
+        <div class="form-card-header"><h3>プロフィール写真</h3></div>
+        <div class="form-card-body">
+          <div class="avatar-upload">
+            <div class="avatar-preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="avatar-actions">
+              <button class="btn-upload">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                写真をアップロード
+              </button>
+              <div class="form-hint">推奨: 400x400px、5MB以下</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="form-card">
+        <div class="form-card-header"><h3>基本情報</h3></div>
+        <div class="form-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>姓<span class="required">*</span></label>
+              <input type="text" placeholder="佐藤">
+            </div>
+            <div class="form-group">
+              <label>名<span class="required">*</span></label>
+              <input type="text" placeholder="花子">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>姓（フリガナ）</label>
+              <input type="text" placeholder="サトウ">
+            </div>
+            <div class="form-group">
+              <label>名（フリガナ）</label>
+              <input type="text" placeholder="ハナコ">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>メールアドレス<span class="required">*</span></label>
+              <input type="email" placeholder="example@co-labo-maker.com">
+            </div>
+            <div class="form-group">
+              <label>社員番号</label>
+              <input type="text" placeholder="CLM-000">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>雇用形態<span class="required">*</span></label>
+              <select>
+                <option value="">選択してください</option>
+                <option>正社員</option>
+                <option>業務委託</option>
+                <option>インターン</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>入社日</label>
+              <input type="date">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organization -->
+      <div class="form-card">
+        <div class="form-card-header"><h3>所属・担当</h3></div>
+        <div class="form-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>所属組織<span class="required">*</span></label>
+              <select>
+                <option value="">選択してください</option>
+                <option>経営企画</option>
+                <option>プロダクト開発部</option>
+                <option>事業開発部</option>
+                <option>マーケティング部</option>
+                <option>CS部</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>役職</label>
+              <input type="text" placeholder="例: チームリーダー">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>担当業務</label>
+              <textarea placeholder="主な担当業務を入力してください（複数可）"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>稼働時間（月間）<span class="required">*</span></label>
+              <select>
+                <option value="">選択してください</option>
+                <option>160h（フルタイム）</option>
+                <option>120h</option>
+                <option>80h</option>
+                <option>60h</option>
+                <option>40h</option>
+                <option>その他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>稼働時間（その他の場合）</label>
+              <input type="number" placeholder="時間数を入力" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Managers -->
+      <div class="form-card">
+        <div class="form-card-header"><h3>上長設定</h3></div>
+        <div class="form-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>第1上長<span class="required">*</span></label>
+              <select>
+                <option value="">選択してください</option>
+                <option>山田 太郎（経営企画）</option>
+                <option>佐藤 花子（プロダクト開発部）</option>
+                <option>鈴木 一郎（事業開発部）</option>
+                <option>伊藤 大輔（マーケティング部）</option>
+                <option>中村 さくら（CS部）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>第2上長</label>
+              <select>
+                <option value="">選択してください（任意）</option>
+                <option>山田 太郎（経営企画）</option>
+                <option>佐藤 花子（プロダクト開発部）</option>
+                <option>鈴木 一郎（事業開発部）</option>
+                <option>伊藤 大輔（マーケティング部）</option>
+                <option>中村 さくら（CS部）</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strengths Finder -->
+      <div class="form-card">
+        <div class="form-card-header"><h3>ストレングスファインダー TOP5</h3></div>
+        <div class="form-card-body">
+          <p style="font-size:12px;color:var(--color-text-subtle);margin-bottom:16px;">CliftonStrengths の診断結果を上位5つ登録してください。</p>
+          <div class="strengths-input">
+            <div class="strength-item">
+              <div class="num">1</div>
+              <select>
+                <option value="">資質を選択...</option>
+                <option>アレンジ</option><option>回復志向</option><option>規律性</option><option>公平性</option>
+                <option>慎重さ</option><option>信念</option><option>責任感</option><option>達成欲</option>
+                <option>目標志向</option><option>活発性</option><option>競争性</option><option>コミュニケーション</option>
+                <option>最上志向</option><option>自我</option><option>自己確信</option><option>社交性</option>
+                <option>指令性</option><option>運命思考</option><option>共感性</option><option>個別化</option>
+                <option>親密性</option><option>成長促進</option><option>調和性</option><option>適応性</option>
+                <option>包含</option><option>ポジティブ</option><option>分析思考</option><option>原点思考</option>
+                <option>学習欲</option><option>収集心</option><option>戦略性</option><option>着想</option>
+                <option>内省</option><option>未来志向</option>
+              </select>
+            </div>
+            <div class="strength-item">
+              <div class="num">2</div>
+              <select><option value="">資質を選択...</option><option>アレンジ</option><option>回復志向</option><option>規律性</option><option>公平性</option><option>慎重さ</option><option>信念</option><option>責任感</option><option>達成欲</option><option>目標志向</option><option>活発性</option><option>競争性</option><option>コミュニケーション</option><option>最上志向</option><option>自我</option><option>自己確信</option><option>社交性</option><option>指令性</option><option>運命思考</option><option>共感性</option><option>個別化</option><option>親密性</option><option>成長促進</option><option>調和性</option><option>適応性</option><option>包含</option><option>ポジティブ</option><option>分析思考</option><option>原点思考</option><option>学習欲</option><option>収集心</option><option>戦略性</option><option>着想</option><option>内省</option><option>未来志向</option></select>
+            </div>
+            <div class="strength-item">
+              <div class="num">3</div>
+              <select><option value="">資質を選択...</option><option>アレンジ</option><option>回復志向</option><option>規律性</option><option>公平性</option><option>慎重さ</option><option>信念</option><option>責任感</option><option>達成欲</option><option>目標志向</option><option>活発性</option><option>競争性</option><option>コミュニケーション</option><option>最上志向</option><option>自我</option><option>自己確信</option><option>社交性</option><option>指令性</option><option>運命思考</option><option>共感性</option><option>個別化</option><option>親密性</option><option>成長促進</option><option>調和性</option><option>適応性</option><option>包含</option><option>ポジティブ</option><option>分析思考</option><option>原点思考</option><option>学習欲</option><option>収集心</option><option>戦略性</option><option>着想</option><option>内省</option><option>未来志向</option></select>
+            </div>
+            <div class="strength-item">
+              <div class="num">4</div>
+              <select><option value="">資質を選択...</option><option>アレンジ</option><option>回復志向</option><option>規律性</option><option>公平性</option><option>慎重さ</option><option>信念</option><option>責任感</option><option>達成欲</option><option>目標志向</option><option>活発性</option><option>競争性</option><option>コミュニケーション</option><option>最上志向</option><option>自我</option><option>自己確信</option><option>社交性</option><option>指令性</option><option>運命思考</option><option>共感性</option><option>個別化</option><option>親密性</option><option>成長促進</option><option>調和性</option><option>適応性</option><option>包含</option><option>ポジティブ</option><option>分析思考</option><option>原点思考</option><option>学習欲</option><option>収集心</option><option>戦略性</option><option>着想</option><option>内省</option><option>未来志向</option></select>
+            </div>
+            <div class="strength-item">
+              <div class="num">5</div>
+              <select><option value="">資質を選択...</option><option>アレンジ</option><option>回復志向</option><option>規律性</option><option>公平性</option><option>慎重さ</option><option>信念</option><option>責任感</option><option>達成欲</option><option>目標志向</option><option>活発性</option><option>競争性</option><option>コミュニケーション</option><option>最上志向</option><option>自我</option><option>自己確信</option><option>社交性</option><option>指令性</option><option>運命思考</option><option>共感性</option><option>個別化</option><option>親密性</option><option>成長促進</option><option>調和性</option><option>適応性</option><option>包含</option><option>ポジティブ</option><option>分析思考</option><option>原点思考</option><option>学習欲</option><option>収集心</option><option>戦略性</option><option>着想</option><option>内省</option><option>未来志向</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <button class="btn-cancel" onclick="history.back()">キャンセル</button>
+        <button class="btn-save" onclick="alert('保存しました（デモ）')">保存する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+</script>
+</body>
+</html>
