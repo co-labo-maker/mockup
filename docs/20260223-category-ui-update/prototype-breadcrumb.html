@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>商品詳細 - 高速液体クロマトグラフ LC-20AD 送液ユニット | Co-LABO MAKER</title>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #333;
+  background: #fff;
+  min-width: 1280px;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Header ── */
+.header {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  position: relative;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* logo row */
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #00ADEE;
+  letter-spacing: -0.02em;
+}
+.logo span {
+  color: #EC1B23;
+}
+
+.header-top-links {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: #666;
+}
+.header-top-links a {
+  color: #666;
+  font-size: 12px;
+}
+.header-top-links a:hover {
+  color: #00ADEE;
+}
+
+/* search row */
+.header-search {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  gap: 0;
+}
+
+.category-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+  font-family: inherit;
+}
+.category-btn:hover {
+  background: #f9f9f9;
+}
+.category-btn .arrow {
+  font-size: 10px;
+}
+
+.search-input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
+  padding: 0 12px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.search-input:focus {
+  border-color: #00ADEE;
+}
+
+.search-btn {
+  height: 36px;
+  padding: 0 24px;
+  background: #00ADEE;
+  color: #fff;
+  border: 1px solid #00ADEE;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+.search-btn:hover {
+  background: #009CD6;
+}
+
+.header-right-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 20px;
+  white-space: nowrap;
+}
+.header-right-links a {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+}
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 104px;
+  padding: 0 28px;
+  background: #fff;
+  border: 1px solid #EC1B23;
+  border-radius: 999px;
+  color: #EC1B23 !important;
+  font-weight: 700 !important;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: 'Noto Sans JP', sans-serif;
+  text-decoration: none;
+  transition: background .15s;
+}
+.contact-link:hover {
+  background: #FFF0F0;
+  text-decoration: none;
+}
+
+/* ========== Breadcrumb ========== */
+.breadcrumb-bar {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 40px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb a {
+  color: #666;
+  text-decoration: none;
+  padding-bottom: 1px;
+  border-bottom: 1px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+
+.breadcrumb a:hover {
+  color: #009CD6;
+  border-bottom-color: #009CD6;
+}
+
+.breadcrumb .sep {
+  display: flex;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  margin: 0 4px;
+}
+
+.breadcrumb .sep svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #999;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.breadcrumb .current {
+  color: #666;
+}
+
+/* ========== Main Content ========== */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 40px;
+}
+
+/* ========== Product Detail ========== */
+.product-detail {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+/* Left Column - Images */
+.product-images {
+  flex-shrink: 0;
+  width: 480px;
+}
+
+.main-image {
+  width: 480px;
+  height: 360px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 13px;
+  gap: 12px;
+}
+
+.main-image svg {
+  opacity: 0.4;
+}
+
+.image-note {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+.sub-images {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.sub-image {
+  width: 80px;
+  height: 80px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sub-image:hover {
+  border-color: #00ADEE;
+}
+
+.sub-image svg {
+  width: 24px;
+  height: 24px;
+  opacity: 0.3;
+}
+
+/* Right Column - Product Info */
+.product-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.product-maker {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.product-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.product-model {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.product-model span {
+  color: #374151;
+}
+
+.product-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.badge-rank-a {
+  background: #00D600;
+  color: #fff;
+}
+
+.badge-rank-b {
+  background: #00ADEE;
+  color: #fff;
+}
+
+.badge-rank-c {
+  background: #EA580C;
+  color: #fff;
+}
+
+.badge-status {
+  background: #eff6ff;
+  color: #00ADEE;
+  border: 1px solid #bfdbfe;
+}
+
+.product-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 16px 0;
+}
+
+.product-price-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.product-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #EC1B23;
+  letter-spacing: -0.02em;
+}
+
+.product-price .tax {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+  margin-left: 2px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  min-width: 136px;
+  padding: 16px 24px;
+  gap: 4px;
+  background: #EC1B23;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.btn-primary:hover {
+  background: #d41920;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  min-width: 136px;
+  padding: 16px 24px;
+  gap: 4px;
+  background: #fff;
+  color: #EC1B23;
+  border: 1px solid #EC1B23;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.btn-outline:hover {
+  background: #FFF0F0;
+}
+
+
+/* ========== Spec Table ========== */
+.section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #00ADEE;
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.spec-table th,
+.spec-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.spec-table th {
+  width: 180px;
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+  white-space: nowrap;
+}
+
+.spec-table tr:nth-child(even) th {
+  background: #f3f4f6;
+}
+
+.spec-table tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+.spec-table td {
+  color: #333;
+}
+
+/* ========== Footer ========== */
+.footer {
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  padding: 24px 40px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-logo {
+  font-size: 14px;
+  font-weight: 700;
+  color: #00ADEE;
+  margin-bottom: 4px;
+}
+
+.footer-logo span {
+  color: #EC1B23;
+}
+
+.footer-copy {
+  font-size: 11px;
+  color: #9ca3af;
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a>
+</div>
+
+<!-- ========== Header ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+    <div class="header-search">
+      <button class="category-btn" id="categoryBtn">
+        全カテゴリ <span class="arrow">&#9660;</span>
+      </button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">カート (0)</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== Breadcrumb ========== -->
+<nav class="breadcrumb-bar">
+  <ol class="breadcrumb">
+    <li><a href="#">トップ</a></li>
+    <li class="sep"><svg viewBox="0 0 18 18"><polyline points="7 4.5 11.5 9 7 13.5"/></svg></li>
+    <li><a href="#">分離・クロマトグラフィー</a></li>
+    <li class="sep"><svg viewBox="0 0 18 18"><polyline points="7 4.5 11.5 9 7 13.5"/></svg></li>
+    <li><a href="#">HPLC</a></li>
+    <li class="sep"><svg viewBox="0 0 18 18"><polyline points="7 4.5 11.5 9 7 13.5"/></svg></li>
+    <li class="current">送液ユニット</li>
+  </ol>
+</nav>
+
+<!-- ========== Main Content ========== -->
+<div class="main-content">
+
+  <!-- Product Detail -->
+  <div class="product-detail">
+
+    <!-- Left: Images -->
+    <div class="product-images">
+      <div class="main-image">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <span>480 x 360</span>
+      </div>
+      <p class="image-note">※画像はイメージです</p>
+      <div class="sub-images">
+        <div class="sub-image">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <div class="sub-image">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <div class="sub-image">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <div class="sub-image">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Product Info -->
+    <div class="product-info">
+      <p class="product-maker">島津製作所</p>
+      <h1 class="product-name">高速液体クロマトグラフ LC-20AD 送液ユニット</h1>
+      <p class="product-model">型番: <span>LC-20AD</span></p>
+
+      <div class="product-badges">
+        <span class="badge badge-rank-a">A 美品</span>
+        <span class="badge badge-status">販売中</span>
+      </div>
+
+      <hr class="product-divider">
+
+      <p class="product-price-label">販売価格</p>
+      <p class="product-price">&yen;1,280,000<span class="tax">（税込）</span></p>
+
+      <div class="product-actions">
+        <button class="btn-primary" type="button">見積依頼する</button>
+        <button class="btn-outline" type="button">お問い合わせ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Used Equipment Info -->
+  <div class="section">
+    <h2 class="section-title">中古品詳細情報</h2>
+    <table class="spec-table">
+      <tbody>
+        <tr><th>使用年数</th><td>約5年（2018年製）</td></tr>
+        <tr><th>動作確認</th><td>確認済み（2026年1月検査）</td></tr>
+        <tr><th>外観状態</th><td>A（目立つキズ・汚れなし）</td></tr>
+        <tr><th>付属品</th><td>電源ケーブル、マニュアル（コピー）、接続チューブセット</td></tr>
+        <tr><th>メンテナンス</th><td>プランジャーシール交換済み、チェックバルブ清掃済み</td></tr>
+        <tr><th>保証</th><td>6ヶ月動作保証付き</td></tr>
+        <tr><th>備考</th><td>動作テスト済み。すぐにご使用いただけます。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Spec Table -->
+  <div class="section">
+    <h2 class="section-title">製品スペック</h2>
+    <table class="spec-table">
+      <tbody>
+        <tr><th>メーカー</th><td>島津製作所</td></tr>
+        <tr><th>型番</th><td>LC-20AD</td></tr>
+        <tr><th>製造年</th><td>2018年</td></tr>
+        <tr><th>送液方式</th><td>並列ダブルプランジャ方式</td></tr>
+        <tr><th>流量範囲</th><td>0.0001〜10.000 mL/min</td></tr>
+        <tr><th>最高圧力</th><td>40 MPa</td></tr>
+        <tr><th>流量精度</th><td>RSD 0.06%以下</td></tr>
+        <tr><th>外形寸法</th><td>W260 &times; D420 &times; H140 mm</td></tr>
+        <tr><th>質量</th><td>約10 kg</td></tr>
+        <tr><th>電源</th><td>AC100V 50/60Hz</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ========== Footer ========== -->
+<footer class="footer">
+  <div class="footer-logo">Co-LABO <span>MAKER</span></div>
+  <p class="footer-copy">&copy; 2026 Co-LABO MAKER All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Co-LABO MAKER - カテゴリプルダウン プロトタイプ</title>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background: #F7F7F7;
+  min-width: 1280px;
+  line-height: 1.5;
+}
+
+a {
+  color: #00ADEE;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ── Header ── */
+.header {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  position: relative;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* logo row */
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #00ADEE;
+  letter-spacing: -0.02em;
+}
+.logo span {
+  color: #EC1B23;
+}
+
+.header-top-links {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: #666;
+}
+.header-top-links a {
+  color: #666;
+  font-size: 12px;
+}
+.header-top-links a:hover {
+  color: #00ADEE;
+}
+
+/* search row */
+.header-search {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  gap: 0;
+}
+
+.category-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+  font-family: inherit;
+}
+.category-btn:hover {
+  background: #f9f9f9;
+}
+.category-btn.is-open {
+  background: #E6F7FD;
+  border-color: #00ADEE;
+  color: #00ADEE;
+}
+.category-btn .arrow {
+  font-size: 10px;
+  transition: transform .2s;
+}
+.category-btn.is-open .arrow {
+  transform: rotate(180deg);
+}
+
+.search-input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
+  padding: 0 12px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.search-input:focus {
+  border-color: #00ADEE;
+}
+
+.search-btn {
+  height: 36px;
+  padding: 0 24px;
+  background: #00ADEE;
+  color: #fff;
+  border: 1px solid #00ADEE;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+.search-btn:hover {
+  background: #009CD6;
+}
+
+.header-right-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 20px;
+  white-space: nowrap;
+}
+.header-right-links a {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+}
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 104px;
+  padding: 0 28px;
+  background: #fff;
+  border: 1px solid #EC1B23;
+  border-radius: 999px;
+  color: #EC1B23 !important;
+  font-weight: 700 !important;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: background .15s;
+}
+.contact-link:hover {
+  background: #FFF0F0;
+  text-decoration: none;
+}
+
+/* ── Mega Menu ── */
+.mega-menu-wrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 200;
+  display: none;
+}
+.mega-menu-wrapper.is-open {
+  display: block;
+}
+
+.mega-menu-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 199;
+  display: none;
+}
+.mega-menu-overlay.is-open {
+  display: block;
+}
+
+.mega-menu {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  left: -160px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: 2px solid #00ADEE;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+  display: flex;
+  min-height: 480px;
+}
+
+/* level columns */
+.menu-col {
+  border-right: 1px solid #eee;
+  overflow-y: auto;
+  max-height: 520px;
+}
+.menu-col:last-child {
+  border-right: none;
+}
+
+.menu-col-l1 {
+  width: 220px;
+  min-width: 220px;
+  background: #fafafa;
+}
+.menu-col-l2 {
+  width: 260px;
+  min-width: 260px;
+  background: #fff;
+  display: none;
+}
+.menu-col-l2.is-visible {
+  display: block;
+}
+.menu-col-l3 {
+  width: 260px;
+  min-width: 260px;
+  background: #fff;
+  display: none;
+}
+.menu-col-l3.is-visible {
+  display: block;
+}
+
+.menu-col-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  padding: 10px 14px 6px;
+  border-bottom: 1px solid #eee;
+  letter-spacing: .04em;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background .1s, color .1s;
+  border-left: 3px solid transparent;
+  user-select: none;
+}
+.menu-item:hover,
+.menu-item.is-active {
+  background: #00ADEE;
+  color: #fff;
+  border-left-color: #009CD6;
+}
+.menu-item .count {
+  font-size: 11px;
+  color: #999;
+  margin-left: 6px;
+  font-weight: 400;
+}
+.menu-item:hover .count,
+.menu-item.is-active .count {
+  color: rgba(255,255,255,.7);
+}
+.menu-item .chevron {
+  font-size: 10px;
+  color: #bbb;
+  margin-left: auto;
+  padding-left: 8px;
+}
+.menu-item:hover .chevron,
+.menu-item.is-active .chevron {
+  color: rgba(255,255,255,.7);
+}
+
+.menu-item-name {
+  flex: 1;
+  min-width: 0;
+}
+
+/* col-l2, col-l3 items slightly different */
+.menu-col-l2 .menu-item {
+  border-left-color: transparent;
+}
+.menu-col-l2 .menu-item:hover,
+.menu-col-l2 .menu-item.is-active {
+  background: #eff6ff;
+  color: #00ADEE;
+  border-left-color: #00ADEE;
+}
+.menu-col-l2 .menu-item:hover .count,
+.menu-col-l2 .menu-item.is-active .count {
+  color: #80D6F7;
+}
+.menu-col-l2 .menu-item:hover .chevron,
+.menu-col-l2 .menu-item.is-active .chevron {
+  color: #80D6F7;
+}
+
+.menu-col-l3 .menu-item {
+  border-left-color: transparent;
+  padding-left: 18px;
+}
+.menu-col-l3 .menu-item:hover {
+  background: #E6F7FD;
+  color: #00ADEE;
+  border-left-color: #80D6F7;
+}
+.menu-col-l3 .menu-item:hover .count {
+  color: #80D6F7;
+}
+
+/* ── Main Content (dummy) ── */
+.main-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #666;
+  margin-bottom: 20px;
+}
+.breadcrumb a {
+  color: #666;
+  padding-bottom: 1px;
+  border-bottom: 1px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.breadcrumb a:hover {
+  color: #009CD6;
+  border-bottom-color: #009CD6;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #00ADEE;
+}
+
+.hero-banner {
+  background: #009CD6;
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  color: #fff;
+}
+.hero-banner-left {
+  display: flex;
+  flex-direction: column;
+}
+.hero-banner-left .sub {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+.hero-banner-left .main {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 2px;
+}
+.hero-banner-right {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 1px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  padding-left: 10px;
+  border-left: 3px solid #00ADEE;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow .15s;
+}
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.card-img {
+  width: 100%;
+  height: 120px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 12px;
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+.card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #EC1B23;
+}
+.card-price span {
+  font-size: 11px;
+  font-weight: 400;
+  color: #999;
+}
+
+.cat-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.cat-link {
+  display: block;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  transition: border-color .15s, box-shadow .15s;
+}
+.cat-link:hover {
+  border-color: #00ADEE;
+  box-shadow: 0 1px 4px rgba(0,173,238,.12);
+  text-decoration: none;
+  color: #00ADEE;
+}
+.cat-link .cat-count {
+  font-size: 11px;
+  color: #999;
+  font-weight: 400;
+}
+
+/* ── Footer ── */
+.footer {
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 41px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footer-main {
+  max-width: 1152px;
+  width: 1152px;
+  display: flex;
+  gap: 48px;
+  padding-bottom: 41px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.footer-col {
+  flex: 1;
+}
+.footer-heading {
+  font-size: 16px;
+  color: #666;
+  line-height: 24px;
+  margin-bottom: 4px;
+}
+.footer-text {
+  font-size: 16px;
+  color: #666;
+  line-height: 24px;
+}
+.footer-text-lg {
+  font-size: 19.5px;
+  color: #666;
+  line-height: 30px;
+}
+.footer-text-md {
+  font-size: 18px;
+  color: #666;
+  line-height: 27px;
+}
+.footer-section {
+  margin-bottom: 24px;
+}
+.footer-section:last-child {
+  margin-bottom: 0;
+}
+.footer-link {
+  font-size: 16px;
+  color: #2563eb;
+  line-height: 24px;
+  text-decoration: underline;
+}
+.footer-bottom {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  line-height: 21px;
+}
+
+/* scrollbar */
+.menu-col::-webkit-scrollbar {
+  width: 5px;
+}
+.menu-col::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 3px;
+}
+</style>
+</head>
+<body>
+<script>if(sessionStorage.getItem("proto_auth")!=="b78596825458be558740342d5db7145da954cdd9e8a5d3494dce43d5c019dfca"){location.replace("../index.html");}</script>
+<div style="position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center;">
+  <span style="padding:6px 12px;background:rgba(0,0,0,0.75);color:#fff;border-radius:6px;font-size:12px;font-family:system-ui,sans-serif;white-space:nowrap;">プロトタイプ — ページ内リンクは無効です</span>
+  <a href="prototype-index.html" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#00ADEE;color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-family:system-ui,sans-serif;">&#8592; 戻る</a>
+</div>
+
+<!-- ====== Header ====== -->
+<header class="header">
+  <div class="header-inner">
+
+    <!-- Top row: Logo + links -->
+    <div class="header-top">
+      <div class="logo">Co-LABO <span>MAKER</span></div>
+      <div class="header-top-links">
+        <a href="#">ご利用ガイド</a>
+        <a href="#">買取査定</a>
+        <a href="#">会社概要</a>
+        <a href="#">マイページ</a>
+      </div>
+    </div>
+
+    <!-- Search row -->
+    <div class="header-search">
+      <button class="category-btn" id="categoryBtn">
+        全カテゴリ <span class="arrow">&#9660;</span>
+      </button>
+      <input type="text" class="search-input" placeholder="商品名・型番・メーカー名で検索" />
+      <button class="search-btn">検索</button>
+      <div class="header-right-links">
+        <a href="#">カート (0)</a>
+        <a href="#" class="contact-link">お問い合わせ</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mega Menu -->
+  <div class="mega-menu-overlay" id="megaOverlay"></div>
+  <div class="mega-menu-wrapper" id="megaMenu">
+    <div class="mega-menu">
+      <!-- L1 -->
+      <div class="menu-col menu-col-l1" id="colL1">
+        <div class="menu-col-header">カテゴリ一覧</div>
+      </div>
+      <!-- L2 -->
+      <div class="menu-col menu-col-l2" id="colL2">
+        <div class="menu-col-header" id="colL2Header">中カテゴリ</div>
+        <div id="colL2Body"></div>
+      </div>
+      <!-- L3 -->
+      <div class="menu-col menu-col-l3" id="colL3">
+        <div class="menu-col-header" id="colL3Header">詳細カテゴリ</div>
+        <div id="colL3Body"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== Hero Banner (全幅) ====== -->
+<div class="hero-banner">
+  <div class="hero-banner-left">
+    <span class="sub">コラボメーカーの</span>
+    <span class="main">中古理化学機器・試薬</span>
+  </div>
+  <div class="hero-banner-right">
+    新品同様の安心を、格安・短納期で。<br>
+    メンテナンス・稼働保証付き商品多数！
+  </div>
+</div>
+
+<!-- ====== Main Content ====== -->
+<main class="main-content">
+  <div class="section-title">カテゴリから探す</div>
+  <div class="cat-links" id="catLinks"></div>
+
+  <div class="section-title">新着商品</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">HPLC 送液ユニット LC-20AD</div>
+      <div class="card-price">¥198,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">電子天秤 GR-202</div>
+      <div class="card-price">¥89,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">遠心分離機 CF16RXII</div>
+      <div class="card-price">¥248,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">デジタルオシロスコープ TDS2024C</div>
+      <div class="card-price">¥128,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">FT-IR 分光光度計 IRSpirit</div>
+      <div class="card-price">¥580,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">CO2インキュベーター MCO-18AC</div>
+      <div class="card-price">¥178,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">ロータリーエバポレーター N-1300</div>
+      <div class="card-price">¥158,000 <span>(税込)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">画像準備中</div>
+      <div class="card-title">サーマルサイクラー T100</div>
+      <div class="card-price">¥210,000 <span>(税込)</span></div>
+    </div>
+  </div>
+</main>
+
+<!-- ====== Footer ====== -->
+<footer class="footer">
+  <div class="footer-main">
+    <div class="footer-col">
+      <div class="footer-section">
+        <div class="footer-heading">会社名</div>
+        <div class="footer-text-lg">株式会社Co-LABO MAKER</div>
+        <div class="footer-text-md">（コラボメーカー）</div>
+      </div>
+      <div class="footer-section">
+        <div class="footer-heading">住所</div>
+        <div class="footer-text">[本社]〒980-0803</div>
+        <div class="footer-text">宮城県仙台市青葉区国分町1丁目4-9 enspace</div>
+        <br>
+        <div class="footer-text">[東京]〒136-0082</div>
+        <div class="footer-text">東京都江東区新木場1-18-6</div>
+        <div class="footer-text">ライフサイエンスハブ新木場7F office10</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-section">
+        <div class="footer-heading">事業内容</div>
+        <div class="footer-text">実験機器・設備および技術のシェアリングプラットフォーム 「Co-LABO MAKER」の企画・開発・運営。 中古機器・試薬・資材の売買。</div>
+      </div>
+      <div class="footer-section">
+        <div class="footer-heading">公式サイト</div>
+        <a class="footer-link" href="#">https://reuse.co-labo-maker.com</a>
+        <div class="footer-text">中古機器・試薬・資材の売買について、ご覧いただけます。</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>（古物商営業許可）株式会社Co-LABO MAKER 宮城県公安委員会許可証 第221000001439号</div>
+    <div>Copyright 2025 Co-LABO MAKER</div>
+  </div>
+</footer>
+
+<script>
+// ── Category Data ──
+var categories = [
+  {
+    name: "分離・クロマトグラフィー", count: 156,
+    children: [
+      { name: "HPLC", count: 42, children: [
+        { name: "送液ユニット", count: 8 },
+        { name: "検出器", count: 12 },
+        { name: "カラムオーブン", count: 6 },
+        { name: "オートサンプラー", count: 7 },
+        { name: "HPLCシステム", count: 9 }
+      ]},
+      { name: "GC", count: 28, children: [
+        { name: "GC本体", count: 10 },
+        { name: "検出器", count: 8 },
+        { name: "ヘッドスペースサンプラー", count: 4 },
+        { name: "GCシステム", count: 6 }
+      ]},
+      { name: "質量分析計", count: 34, children: [
+        { name: "LC-MS/MS", count: 12 },
+        { name: "シングル四重極MS", count: 8 },
+        { name: "飛行時間型TOF", count: 7 },
+        { name: "イオントラップ", count: 7 }
+      ]},
+      { name: "遠心分離機", count: 52, children: [
+        { name: "卓上小型", count: 15 },
+        { name: "高速冷却", count: 14 },
+        { name: "超遠心機", count: 8 },
+        { name: "マイクロ遠心機", count: 15 }
+      ]}
+    ]
+  },
+  {
+    name: "分光・元素分析", count: 89,
+    children: [
+      { name: "分光光度計", count: 38, children: [
+        { name: "UV-Vis", count: 18 },
+        { name: "FT-IR", count: 12 },
+        { name: "NIR", count: 8 }
+      ]},
+      { name: "原子吸光・ICP", count: 24, children: [
+        { name: "AAS", count: 8 },
+        { name: "ICP-OES", count: 9 },
+        { name: "ICP-MS", count: 7 }
+      ]},
+      { name: "蛍光X線分析装置", count: 15 },
+      { name: "レーザー関連機器", count: 12 }
+    ]
+  },
+  {
+    name: "顕微・観察機器", count: 67,
+    children: [
+      { name: "顕微鏡", count: 52, children: [
+        { name: "光学", count: 15 },
+        { name: "実体", count: 12 },
+        { name: "蛍光", count: 8 },
+        { name: "電子(SEM/TEM)", count: 10 },
+        { name: "デジタルマイクロスコープ", count: 7 }
+      ]},
+      { name: "画像撮影装置", count: 15 }
+    ]
+  },
+  {
+    name: "天秤・計量機器", count: 43,
+    children: [
+      { name: "電子天秤", count: 43, children: [
+        { name: "分析天秤", count: 18 },
+        { name: "精密天秤", count: 16 },
+        { name: "上皿天秤", count: 9 }
+      ]}
+    ]
+  },
+  {
+    name: "培養・滅菌機器", count: 78,
+    children: [
+      { name: "インキュベーター", count: 28, children: [
+        { name: "CO2", count: 10 },
+        { name: "恒温", count: 8 },
+        { name: "振とう", count: 5 },
+        { name: "低温", count: 5 }
+      ]},
+      { name: "オートクレーブ・滅菌器", count: 18 },
+      { name: "クリーンベンチ", count: 16 },
+      { name: "乾燥器・洗浄機", count: 16, children: [
+        { name: "定温乾燥器", count: 6 },
+        { name: "真空乾燥器", count: 4 },
+        { name: "超音波洗浄機", count: 6 }
+      ]}
+    ]
+  },
+  {
+    name: "温度制御機器", count: 95,
+    children: [
+      { name: "恒温槽・恒温器", count: 25, children: [
+        { name: "恒温水槽", count: 12 },
+        { name: "恒温油槽", count: 5 },
+        { name: "恒温恒湿器", count: 8 }
+      ]},
+      { name: "フリーザー", count: 22, children: [
+        { name: "ディープ-80℃", count: 10 },
+        { name: "超低温-150℃", count: 4 },
+        { name: "メディカル", count: 8 }
+      ]},
+      { name: "チラー", count: 14 },
+      { name: "電気炉・加熱器", count: 20, children: [
+        { name: "マッフル炉", count: 8 },
+        { name: "管状炉", count: 5 },
+        { name: "ホットプレート", count: 7 }
+      ]},
+      { name: "凍結乾燥機", count: 14 }
+    ]
+  },
+  {
+    name: "前処理・サンプル調製機器", count: 72,
+    children: [
+      { name: "攪拌機・振とう器", count: 24, children: [
+        { name: "マグネチックスターラー", count: 8 },
+        { name: "メカニカルスターラー", count: 4 },
+        { name: "振とう器", count: 7 },
+        { name: "ボルテックスミキサー", count: 5 }
+      ]},
+      { name: "ホモジナイザー", count: 10 },
+      { name: "エバポレーター・濃縮装置", count: 18, children: [
+        { name: "ロータリーエバポレーター", count: 10 },
+        { name: "遠心濃縮機", count: 4 },
+        { name: "窒素吹付", count: 4 }
+      ]},
+      { name: "定量ポンプ", count: 8 },
+      { name: "分注器・ピペット", count: 12 }
+    ]
+  },
+  {
+    name: "バイオ・遺伝子関連機器", count: 45,
+    children: [
+      { name: "PCR・電気泳動", count: 28, children: [
+        { name: "サーマルサイクラー", count: 10 },
+        { name: "リアルタイムPCR", count: 8 },
+        { name: "電気泳動装置", count: 6 },
+        { name: "ゲルイメージング", count: 4 }
+      ]},
+      { name: "フローサイトメーター", count: 9 },
+      { name: "次世代シーケンサー・遺伝子解析", count: 8 }
+    ]
+  },
+  {
+    name: "電気計測器", count: 68,
+    children: [
+      { name: "オシロスコープ", count: 22, children: [
+        { name: "デジタル", count: 16 },
+        { name: "ミックスドシグナル", count: 6 }
+      ]},
+      { name: "マルチメーター", count: 10 },
+      { name: "電源装置", count: 16, children: [
+        { name: "直流安定化", count: 8 },
+        { name: "交流電源", count: 4 },
+        { name: "電子負荷", count: 4 }
+      ]},
+      { name: "アナライザー", count: 12, children: [
+        { name: "スペクトラム", count: 5 },
+        { name: "ネットワーク", count: 4 },
+        { name: "ロジック", count: 3 }
+      ]},
+      { name: "信号発生器", count: 8 }
+    ]
+  },
+  {
+    name: "環境・物性測定機器", count: 54,
+    children: [
+      { name: "pH計・水質測定器", count: 14 },
+      { name: "温湿度計", count: 8 },
+      { name: "環境測定器", count: 10 },
+      { name: "材料試験機", count: 12, children: [
+        { name: "引張試験機", count: 5 },
+        { name: "硬度計", count: 4 },
+        { name: "粘度計", count: 3 }
+      ]},
+      { name: "熱分析装置", count: 10 }
+    ]
+  },
+  {
+    name: "実験室設備・備品", count: 86,
+    children: [
+      { name: "実験台", count: 15 },
+      { name: "ドラフトチャンバー", count: 12 },
+      { name: "真空ポンプ", count: 18, children: [
+        { name: "ロータリーポンプ", count: 8 },
+        { name: "ダイアフラムポンプ", count: 6 },
+        { name: "ターボ分子ポンプ", count: 4 }
+      ]},
+      { name: "純水装置", count: 14 },
+      { name: "実験器具・消耗品", count: 18 },
+      { name: "工具類", count: 9 }
+    ]
+  },
+  {
+    name: "データ処理・制御システム", count: 23,
+    children: [
+      { name: "クロマトグラフィーデータ処理装置", count: 8 },
+      { name: "制御モジュール・コントローラー", count: 8 },
+      { name: "ソフトウェア・ワークステーション", count: 7 }
+    ]
+  },
+  {
+    name: "その他機器", count: 42,
+    children: [
+      { name: "動物実験機器", count: 5 },
+      { name: "病理・組織関連", count: 6 },
+      { name: "医療・薬理機器", count: 8 },
+      { name: "OA機器・パソコン", count: 10 },
+      { name: "オフィス家具", count: 8 },
+      { name: "その他", count: 5 }
+    ]
+  }
+];
+
+// ── DOM refs ──
+var categoryBtn = document.getElementById("categoryBtn");
+var megaMenu    = document.getElementById("megaMenu");
+var megaOverlay = document.getElementById("megaOverlay");
+var colL1       = document.getElementById("colL1");
+var colL2       = document.getElementById("colL2");
+var colL2Header = document.getElementById("colL2Header");
+var colL2Body   = document.getElementById("colL2Body");
+var colL3       = document.getElementById("colL3");
+var colL3Header = document.getElementById("colL3Header");
+var colL3Body   = document.getElementById("colL3Body");
+
+// ── Build L1 ──
+categories.forEach(function(cat, i) {
+  var el = document.createElement("div");
+  el.className = "menu-item";
+  el.setAttribute("data-index", i);
+  var hasChildren = cat.children && cat.children.length > 0;
+  el.innerHTML =
+    '<span class="menu-item-name">' + cat.name + '</span>' +
+    '<span class="count">(' + cat.count + ')</span>' +
+    (hasChildren ? '<span class="chevron">&#9654;</span>' : '');
+  el.addEventListener("mouseenter", function() { showL2(i); });
+  colL1.appendChild(el);
+});
+
+// ── Build category links on page ──
+var catLinksEl = document.getElementById("catLinks");
+categories.forEach(function(cat) {
+  var a = document.createElement("a");
+  a.href = "#";
+  a.className = "cat-link";
+  a.innerHTML = cat.name + ' <span class="cat-count">(' + cat.count + ')</span>';
+  catLinksEl.appendChild(a);
+});
+
+// ── Show / Hide mega menu ──
+function openMenu() {
+  megaMenu.classList.add("is-open");
+  megaOverlay.classList.add("is-open");
+  categoryBtn.classList.add("is-open");
+  resetColumns();
+}
+
+function closeMenu() {
+  megaMenu.classList.remove("is-open");
+  megaOverlay.classList.remove("is-open");
+  categoryBtn.classList.remove("is-open");
+  resetColumns();
+}
+
+function toggleMenu() {
+  if (megaMenu.classList.contains("is-open")) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
+}
+
+function resetColumns() {
+  colL2.classList.remove("is-visible");
+  colL3.classList.remove("is-visible");
+  colL2Body.innerHTML = "";
+  colL3Body.innerHTML = "";
+  // clear active
+  var items = colL1.querySelectorAll(".menu-item");
+  for (var i = 0; i < items.length; i++) {
+    items[i].classList.remove("is-active");
+  }
+}
+
+categoryBtn.addEventListener("click", function(e) {
+  e.stopPropagation();
+  toggleMenu();
+});
+
+megaOverlay.addEventListener("click", function() {
+  closeMenu();
+});
+
+// close on outside click
+document.addEventListener("click", function(e) {
+  if (megaMenu.classList.contains("is-open")) {
+    var menuEl = megaMenu.querySelector(".mega-menu");
+    if (!menuEl.contains(e.target) && !categoryBtn.contains(e.target)) {
+      closeMenu();
+    }
+  }
+});
+
+// ── L2 ──
+function showL2(l1Index) {
+  var cat = categories[l1Index];
+  if (!cat.children || cat.children.length === 0) {
+    colL2.classList.remove("is-visible");
+    colL3.classList.remove("is-visible");
+    return;
+  }
+
+  // highlight L1
+  var items = colL1.querySelectorAll(".menu-item");
+  for (var i = 0; i < items.length; i++) {
+    items[i].classList.toggle("is-active", i === l1Index);
+  }
+
+  colL2Header.textContent = cat.name;
+  colL2Body.innerHTML = "";
+  colL3.classList.remove("is-visible");
+  colL3Body.innerHTML = "";
+
+  cat.children.forEach(function(sub, j) {
+    var el = document.createElement("div");
+    el.className = "menu-item";
+    var hasSub = sub.children && sub.children.length > 0;
+    el.innerHTML =
+      '<span class="menu-item-name">' + sub.name + '</span>' +
+      '<span class="count">(' + sub.count + ')</span>' +
+      (hasSub ? '<span class="chevron">&#9654;</span>' : '');
+    el.addEventListener("mouseenter", function() { showL3(l1Index, j); });
+    colL2Body.appendChild(el);
+  });
+
+  colL2.classList.add("is-visible");
+}
+
+// ── L3 ──
+function showL3(l1Index, l2Index) {
+  var sub = categories[l1Index].children[l2Index];
+  if (!sub.children || sub.children.length === 0) {
+    colL3.classList.remove("is-visible");
+    colL3Body.innerHTML = "";
+    // clear L2 active
+    var l2Items = colL2Body.querySelectorAll(".menu-item");
+    for (var k = 0; k < l2Items.length; k++) {
+      l2Items[k].classList.remove("is-active");
+    }
+    return;
+  }
+
+  // highlight L2
+  var l2Items = colL2Body.querySelectorAll(".menu-item");
+  for (var k = 0; k < l2Items.length; k++) {
+    l2Items[k].classList.toggle("is-active", k === l2Index);
+  }
+
+  colL3Header.textContent = sub.name;
+  colL3Body.innerHTML = "";
+
+  sub.children.forEach(function(item) {
+    var el = document.createElement("div");
+    el.className = "menu-item";
+    el.innerHTML =
+      '<span class="menu-item-name">' + item.name + '</span>' +
+      '<span class="count">(' + item.count + ')</span>';
+    colL3Body.appendChild(el);
+  });
+
+  colL3.classList.add("is-visible");
+}
+
+</script>
+</body>
+</html>
